@@ -140,6 +140,28 @@ contactForm.addEventListener('submit', async (e) => {
       throw new Error(`HTTP ${res.status}: ${errBody}`);
     }
 
+    // Send email notification if configured
+    if (NOTIFY_EMAIL) {
+      const html = `<h2>${state.lang === 'ar' ? 'رسالة جديدة من' : 'New message from'} ${data.name}</h2>
+<p><strong>${state.lang === 'ar' ? 'البريد' : 'Email'}:</strong> ${data.email}</p>
+${data.subject ? `<p><strong>${state.lang === 'ar' ? 'الموضوع' : 'Subject'}:</strong> ${data.subject}</p>` : ''}
+<p><strong>${state.lang === 'ar' ? 'الرسالة' : 'Message'}:</strong></p>
+<p>${data.message.replace(/\n/g, '<br>')}</p>`;
+      fetch(`${INS_BASE}/api/email/send-raw`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${INS_ANON}`,
+        },
+        body: JSON.stringify({
+          to: NOTIFY_EMAIL,
+          subject: state.lang === 'ar' ? `رسالة جديدة من ${data.name}` : `New message from ${data.name}`,
+          html,
+          replyTo: data.email,
+        }),
+      }).catch(() => {});
+    }
+
     formStatus.className = 'form-status success';
     formStatus.textContent = state.lang === 'ar' ? 'تم إرسال رسالتك بنجاح! سأتواصل معك قريباً.' : 'Message sent successfully! I will get back to you soon.';
     contactForm.reset();
@@ -277,22 +299,26 @@ if (sheetsSearchInput) {
 // Init sheets
 renderSheets();
 
-/* ===== EmailJS CONFIG ===== */
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') emailjs.init(EMAILJS_PUBLIC_KEY);
+/* ===== EMAIL NOTIFICATION CONFIG ===== */
+const NOTIFY_EMAIL = ''; // Set to your email to receive contact form notifications
 
 function authGenerateCode() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
 function authSendOtp(email, code, lang) {
   return new Promise((resolve) => {
-    if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') { resolve(false); return; }
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      to_email: email, code: code, to_name: email.split('@')[0],
-      subject: lang === 'ar' ? 'رمز التحقق الخاص بك' : 'Your Verification Code',
-      message: lang === 'ar' ? 'رمز التحقق الخاص بك هو: ' + code : 'Your verification code is: ' + code,
-    }).then(() => resolve(true)).catch(() => resolve(false));
+    fetch(`${INS_BASE}/api/email/send-raw`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${INS_ANON}`,
+      },
+      body: JSON.stringify({
+        to: email,
+        subject: lang === 'ar' ? 'رمز التحقق الخاص بك' : 'Your Verification Code',
+        html: `<h2>${lang === 'ar' ? 'رمز التحقق' : 'Verification Code'}</h2><p>${lang === 'ar' ? 'رمز التحقق الخاص بك هو:' : 'Your verification code is:'} <strong>${code}</strong></p>`,
+        replyTo: '',
+      }),
+    }).then(r => resolve(r.ok)).catch(() => resolve(false));
   });
 }
 
