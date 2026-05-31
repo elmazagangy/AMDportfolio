@@ -479,15 +479,39 @@ smartGate.querySelector('.smart-gate__overlay').addEventListener('click', hideSm
 
 smartGateBtn.addEventListener('click', async () => {
   const email = smartGateEmail.value.trim();
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    smartGateHint.textContent = state.lang === 'ar' ? 'أدخل بريداً صحيحاً' : 'Enter a valid email';
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!email || !emailRegex.test(email)) {
+    smartGateHint.textContent = state.lang === 'ar' ? 'بريد إلكتروني غير صحيح' : 'Invalid email address';
     return;
   }
-  smartGateHint.textContent = '';
+  smartGateHint.textContent = state.lang === 'ar' ? 'جاري التحقق...' : 'Validating...';
   smartGateBtn.disabled = true;
   smartGateBtn.textContent = '...';
 
   try {
+    const valRes = await fetch(`${INS_BASE}/functions/validate-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const valData = await valRes.json();
+
+    if (!valData.valid) {
+      const msg = state.lang === 'ar'
+        ? (valData.reason === 'Disposable email not allowed' ? 'البريد المؤقت غير مسموح' :
+           valData.reason === 'Domain not found' ? 'نطاق البريد غير موجود' :
+           valData.reason === 'Domain does not accept email' ? 'النطاق لا يستقبل بريداً' :
+           'بريد إلكتروني غير صحيح')
+        : (valData.reason === 'Disposable email not allowed' ? 'Disposable email not allowed' :
+           valData.reason === 'Domain not found' ? 'Email domain not found' :
+           valData.reason === 'Domain does not accept email' ? 'Domain does not accept email' :
+           'Invalid email address');
+      smartGateHint.textContent = msg;
+      smartGateBtn.disabled = false;
+      smartGateBtn.textContent = state.lang === 'ar' ? 'عرض المشاريع' : 'Show Projects';
+      return;
+    }
+
     await fetch(`${INS_BASE}/api/database/records/contacts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${INS_ANON}` },
