@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title lang="ar">واجهة بلوج متجاوبة | علاء محمد</title>
+  <title lang="en" hidden>Responsive Blog UI | Alaa Mohamed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .project-page { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+    .project-page__back {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 24px; font-size: 0.9rem; color: var(--primary);
+      text-decoration: none; font-weight: 600;
+    }
+    .project-page__title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .project-page__sub { color: var(--text-muted); margin-bottom: 24px; }
+    .project-page__section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; margin-top: 32px; }
+    
+    .device-switcher { display: flex; gap: 8px; margin-bottom: 16px; justify-content: center; }
+    .device-switcher button {
+      padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+      border: 1px solid var(--card-border); background: var(--bg-alt);
+      color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-family: inherit;
+    }
+    .device-switcher button.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .device-frame { border: 2px solid var(--card-border); border-radius: var(--radius); overflow: hidden; width: 100%; transition: all 0.4s ease; }
+    .device-frame.desktop { max-width: 640px; }
+    .device-frame.tablet { max-width: 420px; }
+    .device-frame.mobile { max-width: 280px; }
+    .device-frame__bar { background: var(--bg-alt); padding: 6px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--card-border); }
+    .device-frame__dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .device-frame__dot:nth-child(2) { background: #eab308; }
+    .device-frame__dot:nth-child(3) { background: #22c55e; }
+    .device-frame__body { padding: 16px; }
+
+    /* Blog Demo */
+    .blog-demo { display: flex; gap: 16px; }
+    .blog-demo__sidebar {
+      width: 160px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .blog-demo__sidebar-item {
+      padding: 10px; background: var(--bg-alt); border-radius: 8px;
+      font-size: 0.75rem; border: 1px solid var(--card-border);
+    }
+    .blog-demo__sidebar-item strong { display: block; margin-bottom: 4px; font-size: 0.8rem; }
+    .blog-demo__grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .blog-demo__card {
+      background: var(--bg-alt); border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--card-border); transition: transform 0.3s;
+    }
+    .blog-demo__card:hover { transform: translateY(-2px); }
+    .blog-demo__card img { width: 100%; height: 80px; object-fit: cover; display: block; }
+    .blog-demo__card-body { padding: 8px 10px 10px; }
+    .blog-demo__card-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .blog-demo__card-excerpt { font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .blog-demo__card-date { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* Shrink sidebar on mobile/tablet */
+    .device-frame.mobile .blog-demo__sidebar { display: none; }
+    .device-frame.tablet .blog-demo__sidebar { width: 120px; }
+    .device-frame.tablet .blog-demo__sidebar-item { font-size: 0.7rem; padding: 8px; }
+    .device-frame.mobile .blog-demo__grid { grid-template-columns: 1fr; }
+    .device-frame.tablet .blog-demo__grid { grid-template-columns: 1fr 1fr; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tags span { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-muted); }
+
+    .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .feature-list li { padding: 10px 14px; background: var(--bg-alt); border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--card-border); }
+    .feature-list li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+
+    @media (max-width: 600px) { .blog-demo__sidebar { display: none; } .blog-demo__grid { grid-template-columns: 1fr; } .feature-list { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="project-page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <a href="index.html" class="project-page__back">← <span lang="ar">العودة إلى المعرض</span><span lang="en" hidden>Back to Portfolio</span></a>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="langToggle" aria-label="English">EN</button>
+        <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+      </div>
+    </div>
+
+    <h1 class="project-page__title" lang="ar">واجهة بلوج متجاوبة</h1>
+    <h1 class="project-page__title" lang="en" hidden>Responsive Blog UI</h1>
+    <p class="project-page__sub" lang="ar">تصميم متكيف يعمل على جميع الشاشات - موبيل وتبلت وديسكتوب</p>
+    <p class="project-page__sub" lang="en" hidden>Adaptive design that works on all screens - mobile, tablet, and desktop</p>
+
+    <div class="device-switcher">
+      <button class="active" data-device="desktop"><span lang="ar">حاسوب</span><span lang="en" hidden>Desktop</span></button>
+      <button data-device="tablet"><span lang="ar">جهاز لوحي</span><span lang="en" hidden>Tablet</span></button>
+      <button data-device="mobile"><span lang="ar">جوال</span><span lang="en" hidden>Mobile</span></button>
+    </div>
+
+    <div class="device-frame desktop">
+      <div class="device-frame__bar">
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span style="flex:1;text-align:center;font-size:0.75rem;color:var(--text-muted)">blog.demo</span>
+      </div>
+      <div class="device-frame__body">
+        <div class="blog-demo">
+          <div class="blog-demo__sidebar">
+            <div class="blog-demo__sidebar-item"><strong><span lang="ar">الأقسام</span><span lang="en" hidden>Categories</span></strong> <span lang="ar">تطوير ⋅ تصميم ⋅ تقنية</span><span lang="en" hidden>Dev ⋅ Design ⋅ Tech</span></div>
+            <div class="blog-demo__sidebar-item"><strong><span lang="ar">الأكثر قراءة</span><span lang="en" hidden>Popular</span></strong> <span lang="ar">أفضل ممارسات CSS</span><span lang="en" hidden>CSS Best Practices</span></div>
+            <div class="blog-demo__sidebar-item"><strong><span lang="ar">آخر التعليقات</span><span lang="en" hidden>Latest Comments</span></strong> <span lang="ar">أحمد: مقال رائع!</span><span lang="en" hidden>John: Great article!</span></div>
+          </div>
+          <div class="blog-demo__grid" id="blogGrid">
+            <!-- 6 blog cards - will be populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="project-page__section-title"><span lang="ar">نبذة عن المشروع</span><span lang="en" hidden>About the Project</span></h2>
+    <p lang="ar">واجهة مدونة عصرية تتكيف تلقائياً مع حجم الشاشة. شبكة مقالات مرنة مع شريط جانبي يختفي على الشاشات الصغيرة، وتجربة قراءة سلسة على جميع الأجهزة.</p>
+    <p lang="en" hidden>A modern blog interface that auto-adapts to screen size. Flexible article grid with sidebar that hides on small screens, smooth reading experience on all devices.</p>
+
+    <ul class="feature-list">
+      <li lang="ar">شبكة CSS Grid مرنة</li><li lang="en" hidden>Flexible CSS Grid layout</li>
+      <li lang="ar">شريط جانبي ذكي</li><li lang="en" hidden>Smart sidebar</li>
+      <li lang="ar">صور متجاوبة</li><li lang="en" hidden>Responsive images</li>
+      <li lang="ar">تصميم Mobile First</li><li lang="en" hidden>Mobile First design</li>
+      <li lang="ar">دعم RTL للعربية</li><li lang="en" hidden>RTL support for Arabic</li>
+      <li lang="ar">تحميل فوري بدون مكتبات</li><li lang="en" hidden>Instant loading, no libraries</li>
+    </ul>
+
+    <div class="tags"><span>HTML5</span><span>CSS Grid</span><span>Flexbox</span><span>Responsive</span><span>Mobile First</span></div>
+  </div>
+
+  <script>
+    const state = {
+      lang: localStorage.getItem('portfolio-lang') || 'en',
+      theme: localStorage.getItem('portfolio-theme') || 'light',
+    };
+    const html = document.documentElement;
+
+    const blogData = [
+      { title: { ar: 'أساسيات HTML5', en: 'HTML5 Basics' }, excerpt: { ar: 'دليل شامل لأحدث معايير HTML', en: 'Complete guide to latest HTML standards' }, img: 'https://picsum.photos/seed/blog1/300/200', date: '2026-05-15' },
+      { title: { ar: 'تحسين أداء المواقع', en: 'Site Performance' }, excerpt: { ar: 'كيف تجعل موقعك أسرع', en: 'How to make your site faster' }, img: 'https://picsum.photos/seed/blog2/300/200', date: '2026-05-12' },
+      { title: { ar: 'تصميم متجاوب', en: 'Responsive Design' }, excerpt: { ar: 'مبادئ التصميم لجميع الشاشات', en: 'Design principles for all screens' }, img: 'https://picsum.photos/seed/blog3/300/200', date: '2026-05-10' },
+      { title: { ar: 'CSS Grid المتقدم', en: 'Advanced CSS Grid' }, excerpt: { ar: 'تقنيات متقدمة في الشبكات', en: 'Advanced grid techniques' }, img: 'https://picsum.photos/seed/blog4/300/200', date: '2026-05-08' },
+      { title: { ar: 'JavaScript الحديث', en: 'Modern JavaScript' }, excerpt: { ar: 'أهم ميزات ES2026', en: 'Key ES2026 features' }, img: 'https://picsum.photos/seed/blog5/300/200', date: '2026-05-05' },
+      { title: { ar: 'أمن المواقع', en: 'Web Security' }, excerpt: { ar: 'حماية موقعك من الاختراق', en: 'Protect your site from attacks' }, img: 'https://picsum.photos/seed/blog6/300/200', date: '2026-05-02' },
+    ];
+
+    function renderBlog(lang) {
+      const grid = document.getElementById('blogGrid');
+      grid.innerHTML = blogData.map(post => `
+        <div class="blog-demo__card">
+          <img src="${post.img}" alt="" loading="lazy">
+          <div class="blog-demo__card-body">
+            <div class="blog-demo__card-title">${post.title[lang]}</div>
+            <div class="blog-demo__card-excerpt">${post.excerpt[lang]}</div>
+            <div class="blog-demo__card-date">${post.date}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setLang(lang) {
+      state.lang = lang;
+      html.lang = lang;
+      html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('portfolio-lang', lang);
+      document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'العربية';
+      document.querySelectorAll('[lang]').forEach(el => { el.hidden = el.getAttribute('lang') !== lang; });
+      const titleEl = document.querySelector('title[lang="' + lang + '"]');
+      if (titleEl) document.title = titleEl.textContent;
+      renderBlog(lang);
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+    document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+    document.querySelectorAll('.device-switcher button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.device-switcher button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const frame = document.querySelector('.device-frame');
+        if (frame) frame.className = 'device-frame ' + btn.dataset.device;
+      });
+    });
+
+    setLang(state.lang);
+    setTheme(state.theme);
+  </script>
+</body>
+</html>

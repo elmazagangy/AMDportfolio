@@ -1,0 +1,24 @@
+[auth]
+allowed_redirect_urls = ["http://localhost", "http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:8000", "https://ih9kxwm2.insforge.site"]
+require_email_verification = true
+verify_email_method = "code"
+reset_password_method = "code"
+
+[auth.password]
+min_length = 6
+require_number = true
+require_lowercase = true
+require_uppercase = true
+require_special_char = true
+
+[auth.smtp]
+enabled = false
+host = ""
+port = 465
+username = ""
+sender_email = ""
+sender_name = ""
+min_interval_seconds = 60
+
+[deployments]
+subdomain = "amds"

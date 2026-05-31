@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title lang="ar">علاء محمد | مطور وصانع محتوى</title>
+<title lang="en" hidden>Alaa Mohamed | Developer &amp; Content Creator</title>
+<meta name="description" content="علاء محمد - مطور واجهات مستخدم وصانع محتوى. أبنـي لاندينج بيج فائقة السرعة، واجهات متجاوبة، وأدوات تفاعلية.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236C63FF'/%3E%3Ctext x='16' y='22' font-size='18' fill='white' text-anchor='middle' font-weight='bold' lang='ar'%3Eع%3C/text%3E%3Ctext x='16' y='22' font-size='18' fill='white' text-anchor='middle' font-weight='bold' lang='en' hidden%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav" role="navigation">
+  <div class="nav__inner container">
+    <a href="#" class="nav__logo">AM</a>
+    <div class="nav__actions">
+      <button class="btn-icon" id="langToggle" aria-label="English">EN</button>
+      <button class="btn-icon" id="themeToggle" aria-label="Toggle theme">🌓</button>
+      <button class="btn-icon nav__menu-btn" id="menuToggle" aria-label="Menu">☰</button>
+    </div>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#services"><span lang="ar">خدماتي</span><span lang="en" hidden>Services</span></a></li>
+      <li><a href="#projects"><span lang="ar">مشاريعي</span><span lang="en" hidden>Projects</span></a></li>
+      <li><a href="#contact"><span lang="ar">تواصل</span><span lang="en" hidden>Contact</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__inner container">
+    <div class="hero__content">
+      <h1 class="hero__name">
+        <span class="hero__name-ar" lang="ar">علاء محمد</span>
+        <span class="hero__name-en" lang="en" hidden>Alaa Mohamed</span>
+      </h1>
+      <p class="hero__title">
+        <span lang="ar">مطور واجهات مستخدم &bull; صانع محتوى</span>
+        <span lang="en" hidden>UI Developer &bull; Content Creator</span>
+      </p>
+      <p class="hero__bio">
+        <span lang="ar">أبنـي تجارب ويب سريعة واحترافية. متخصص في لاندينج بيج فائقة الأداء، واجهات مستخدم متجاوبة، وتحويل البيانات والملفات إلى أدوات تفاعلية تعزز حضورك الرقمي.</span>
+        <span lang="en" hidden>I build fast, professional web experiences. Specialized in high-performance landing pages, responsive UIs, and transforming data into interactive tools that enhance your digital presence.</span>
+      </p>
+      <div class="hero__cta">
+        <a href="#projects" class="btn btn-primary"><span lang="ar">مشاريعي</span><span lang="en" hidden>My Work</span></a>
+        <a href="#contact" class="btn btn-outline"><span lang="ar">تواصل معي</span><span lang="en" hidden>Contact Me</span></a>
+      </div>
+      <div class="hero__metrics">
+        <div class="metric-card">
+          <span class="metric-card__value">100</span>
+          <span class="metric-card__label"><span lang="ar">PageSpeed</span><span lang="en" hidden>PageSpeed</span></span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__value">&lt;0.5s</span>
+          <span class="metric-card__label"><span lang="ar">زمن التحميل</span><span lang="en" hidden>Load Time</span></span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__value">100%</span>
+          <span class="metric-card__label"><span lang="ar">متجاوب</span><span lang="en" hidden>Responsive</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== SERVICES ===== -->
+<section class="section" id="services">
+  <div class="container">
+    <h2 class="section__title" data-i18n="services.title"><span lang="ar">خدماتي</span><span lang="en" hidden>Services</span></h2>
+    <p class="section__sub" data-i18n="services.sub"><span lang="ar">ما أقدمه لك من حلول رقمية احترافية</span><span lang="en" hidden>Professional digital solutions I deliver</span></p>
+    <div class="services__grid">
+      <div class="service-card" data-delay="0">
+        <div class="service-card__icon">⚡</div>
+        <h3 data-i18n="services.landing.title"><span lang="ar">لاندينج بيج فائقة السرعة</span><span lang="en" hidden>Ultra-Fast Landing Pages</span></h3>
+        <p data-i18n="services.landing.desc"><span lang="ar">صفحات محسّنة للتحميل تحت 0.5 ثانية مع نتائج PageSpeed 100/100، مصممة لزيادة التحويلات وتقليل الارتداد.</span><span lang="en" hidden>Sub-0.5s loading pages with 100/100 PageSpeed scores, engineered for maximum conversions and minimal bounce rates.</span></p>
+      </div>
+      <div class="service-card" data-delay="100">
+        <div class="service-card__icon">🎨</div>
+        <h3 data-i18n="services.ui.title"><span lang="ar">واجهات مستخدم متجاوبة</span><span lang="en" hidden>Responsive UI Design</span></h3>
+        <p data-i18n="services.ui.desc"><span lang="ar">تجربة مستخدم سلسة على جميع الأجهزة - موبيل، تابلت، ديسكتوب - بتصاميم عصرية وأداء استثنائي.</span><span lang="en" hidden>Seamless UX across mobile, tablet, and desktop with modern design and exceptional performance.</span></p>
+      </div>
+      <div class="service-card" data-delay="200">
+        <div class="service-card__icon">📊</div>
+        <h3 data-i18n="services.data.title"><span lang="ar">تحويل البيانات إلى أدوات</span><span lang="en" hidden>Data Transformation Tools</span></h3>
+        <p data-i18n="services.data.desc"><span lang="ar">حوّل ملفات Excel وSheets إلى أدوات بحث تفاعلية وتطبيقات دوال احترافية للجمع والتحليل.</span><span lang="en" hidden>Transform Excel files and Sheets into interactive search tools and professional calculation applications.</span></p>
+      </div>
+      <div class="service-card" data-delay="300">
+        <div class="service-card__icon">🔄</div>
+        <h3 data-i18n="services.interactive.title"><span lang="ar">تطبيقات تفاعلية</span><span lang="en" hidden">Interactive Applications</span></h3>
+        <p data-i18n="services.interactive.desc"><span lang="ar">صفحات وتطبيقات ويب تفاعلية مع تأثيرات جافا سكريبت متقدمة، تابات ديناميكية، وتجارب مستخدم غامرة.</span><span lang="en" hidden">Interactive web pages and apps with advanced JavaScript effects, dynamic tabs, and immersive user experiences.</span></p>
+      </div>
+      <div class="service-card" data-delay="400">
+        <div class="service-card__icon">📝</div>
+        <h3 data-i18n="services.forms.title"><span lang="ar">نماذج واستبيانات</span><span lang="en" hidden>Forms & Surveys</span></h3>
+        <p data-i18n="services.forms.desc"><span lang="ar">نماذج تفاعلية متعددة الاختيارات، استبيانات ذكية، وصفحات عرض بيانات وصور بتصاميم كاروسيل احترافية.</span><span lang="en" hidden>Interactive multi-choice forms, smart surveys, and data/image display pages with professional carousel designs.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section class="section section--dark" id="projects">
+  <div class="container">
+    <h2 class="section__title" data-i18n="projects.title"><span lang="ar">مشاريعي</span><span lang="en" hidden>Projects</span></h2>
+    <p class="section__sub" data-i18n="projects.sub"><span lang="ar">6 نماذج عمل حقيقية تعكس خبرتي وجودة ما أقدمه</span><span lang="en" hidden>6 real case studies showcasing my expertise and quality</span></p>
+
+    <!-- Project 1: Landing Page Speed -->
+    <article class="project" data-project="1">
+      <div class="project__header" data-i18n="project1.title">
+        <span lang="ar">١. لاندينج بيج فائقة السرعة &mdash; 100/100 PageSpeed</span>
+        <span lang="en" hidden>1. Ultra-Fast Landing Page &mdash; 100/100 PageSpeed</span>
+      </div>
+      <div class="project__body">
+        <div class="project__mockup">
+          <div class="mockup-browser">
+            <div class="mockup-browser__bar">
+              <span></span><span></span><span></span>
+              <span class="mockup-browser__url">mypage.com</span>
+            </div>
+            <div class="mockup-browser__content">
+              <div class="speed-demo">
+                <div class="speed-card speed-card--before">
+                  <div class="speed-card__label">Before</div>
+                  <div class="speed-card__score">34</div>
+                  <div class="speed-card__time">4.2s</div>
+                </div>
+                <div class="speed-card speed-card--after">
+                  <div class="speed-card__label">After</div>
+                  <div class="speed-card__score">100</div>
+                  <div class="speed-card__time">0.4s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project1.subtitle"><span lang="ar">نبذة عن المشروع</span><span lang="en" hidden>Project Overview</span></h4>
+          <p data-i18n="project1.desc"><span lang="ar">لاندينج بيج كانت 4.2 ثانية على الموبيل، 45% من الزوار يرتدون قبل التحميل. أعدت بناءها بصفر مكتبات ثقيلة باستخدام HTML5 وCSS محسّن وJS خفيف. استخدمت WebP للصور مع تحميل كسول. النتيجة: من 34 إلى 100 في PageSpeed، زمن تحميل 0.4 ثانية.</span><span lang="en" hidden>A landing page loading at 4.2s on mobile with 45% bounce rate. Rebuilt with zero bloat using HTML5, optimized CSS, and lightweight JS. WebP images with lazy loading. Result: 34 → 100 PageSpeed, 0.4s load time.</span></p>
+          <div class="project__tags">
+            <span>HTML5</span><span>CSS3</span><span>Vanilla JS</span><span>WebP</span><span>Lazy Load</span>
+          </div>
+          <a href="project-1.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-1.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 2: Responsive Blog UI -->
+    <article class="project" data-project="2">
+      <div class="project__header" data-i18n="project2.title">
+        <span lang="ar">٢. واجهة بلوج متجاوبة &mdash; موبيل + ديسكتوب</span>
+        <span lang="en" hidden>2. Responsive Blog UI &mdash; Mobile + Desktop</span>
+      </div>
+      <div class="project__body project__body--reverse">
+        <div class="project__mockup">
+          <div class="mockup-devices">
+            <div class="mockup-devices__desktop">
+              <div class="mockup-devices__bar"></div>
+              <div class="mockup-blog">
+                <div class="mockup-blog__header"></div>
+                <div class="mockup-blog__grid">
+                  <div></div><div></div><div></div>
+                </div>
+              </div>
+            </div>
+            <div class="mockup-devices__mobile">
+              <div class="mockup-devices__notch"></div>
+              <div class="mockup-blog-mobile">
+                <div class="mockup-blog-mobile__item"></div>
+                <div class="mockup-blog-mobile__item"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project2.subtitle"><span lang="ar">تجربة مستخدم عبر الأجهزة</span><span lang="en" hidden>Cross-Device UX</span></h4>
+          <p data-i18n="project2.desc"><span lang="ar">واجهة مدونة عصرية تتكيف تلقائياً مع حجم الشاشة. تصميم نظيف مع شبكة مقالات مرنة، تجربة قراءة سلسة على الموبيل، وتبويب احترافي على سطح المكتب. تعمل بسلاسة وتحمّل فوري.</span><span lang="en" hidden>A modern blog interface that auto-adapts to screen size. Clean design with flexible article grid, smooth mobile reading, professional desktop layout. Instant loading with seamless experience.</span></p>
+          <div class="project__tags">
+            <span>HTML5</span><span>CSS Grid</span><span>Flexbox</span><span>Responsive</span><span>Mobile First</span>
+          </div>
+          <a href="project-2.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-2.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 3: Excel/Sheets Data Tool (Interactive) -->
+    <article class="project" data-project="3">
+      <div class="project__header" data-i18n="project3.title">
+        <span lang="ar">٣. محول بيانات Excel &rarr; أدوات بحث وحسابات</span>
+        <span lang="en" hidden>3. Excel Data &rarr; Search & Calculation Tools</span>
+      </div>
+      <div class="project__body">
+        <div class="project__mockup">
+          <div class="mockup-sheets" id="sheetsApp">
+            <div class="mockup-sheets__toolbar">
+              <button class="mockup-sheets__tab active" data-sheets-tab="input"><span lang="ar">إدخال</span><span lang="en" hidden>Input</span></button>
+              <button class="mockup-sheets__tab" data-sheets-tab="calc"><span lang="ar">حساب</span><span lang="en" hidden>Calculate</span></button>
+              <button class="mockup-sheets__tab" data-sheets-tab="search"><span lang="ar">بحث</span><span lang="en" hidden>Search</span></button>
+            </div>
+            <div class="mockup-sheets__panel active" data-sheets-panel="input">
+              <div class="mockup-sheets__grid" id="sheetsGrid">
+                <div class="mockup-sheets__header-row">
+                  <span class="mockup-sheets__header"></span>
+                  <span class="mockup-sheets__header"><span lang="ar">القيمة 1</span><span lang="en" hidden>Value 1</span></span>
+                  <span class="mockup-sheets__header"><span lang="ar">القيمة 2</span><span lang="en" hidden>Value 2</span></span>
+                  <span class="mockup-sheets__header"><span lang="ar">الناتج</span><span lang="en" hidden>Result</span></span>
+                </div>
+              </div>
+              <button class="mockup-sheets__add-row" id="sheetsAddRow">+ <span lang="ar">إضافة صف</span><span lang="en" hidden>Add Row</span></button>
+            </div>
+            <div class="mockup-sheets__panel" data-sheets-panel="calc">
+              <div class="mockup-sheets__calc-results" id="sheetsCalcResults">
+                <div class="mockup-sheets__calc-item"><span class="mockup-sheets__calc-label"><span lang="ar">المجموع الكلي</span><span lang="en" hidden>Total Sum</span></span><span class="mockup-sheets__calc-value" id="calcSum">0</span></div>
+                <div class="mockup-sheets__calc-item"><span class="mockup-sheets__calc-label"><span lang="ar">المتوسط</span><span lang="en" hidden>Average</span></span><span class="mockup-sheets__calc-value" id="calcAvg">0</span></div>
+                <div class="mockup-sheets__calc-item"><span class="mockup-sheets__calc-label"><span lang="ar">أكبر قيمة</span><span lang="en" hidden>Max</span></span><span class="mockup-sheets__calc-value" id="calcMax">0</span></div>
+                <div class="mockup-sheets__calc-item"><span class="mockup-sheets__calc-label"><span lang="ar">أصغر قيمة</span><span lang="en" hidden>Min</span></span><span class="mockup-sheets__calc-value" id="calcMin">0</span></div>
+                <div class="mockup-sheets__calc-item"><span class="mockup-sheets__calc-label"><span lang="ar">عدد الصفوف</span><span lang="en" hidden>Row Count</span></span><span class="mockup-sheets__calc-value" id="calcCount">0</span></div>
+              </div>
+            </div>
+            <div class="mockup-sheets__panel" data-sheets-panel="search">
+              <div class="mockup-sheets__search-bar">
+                <input type="text" id="sheetsSearchInput" placeholder="بحث..." class="mockup-sheets__search-input">
+              </div>
+              <div class="mockup-sheets__search-results" id="sheetsSearchResults">
+                <span class="mockup-sheets__search-hint"><span lang="ar">اكتب كلمة للبحث في القيم</span><span lang="en" hidden>Type to search values</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project3.subtitle"><span lang="ar">من جداول البيانات إلى تطبيق دوال</span><span lang="en" hidden>From Spreadsheets to Function Apps</span></h4>
+          <p data-i18n="project3.desc"><span lang="ar">حوّلت ملفات Excel وGoogle Sheets إلى أداة ويب تفاعلية للبحث والجمع والقسمة والحسابات المختلفة. يدعم الإدخال المباشر والبحث الديناميكي، مع واجهة تشبه جداول البيانات لكنها أسرع وأكثر تفاعلية.</span><span lang="en" hidden>Transformed Excel and Google Sheets into an interactive web tool for search, addition, division, and various calculations. Supports direct input and dynamic search with a familiar spreadsheet interface that's faster and more interactive.</span></p>
+          <div class="project__tags">
+            <span>JavaScript</span><span>Data Processing</span><span>DOM</span><span>Interactive</span>
+          </div>
+          <a href="project-3.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-3.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 4: Interactive Tabs -->
+    <article class="project" data-project="4">
+      <div class="project__header" data-i18n="project4.title">
+        <span lang="ar">٤. تابات تفاعلية &mdash; إظهار/إخفاء بتأثيرات</span>
+        <span lang="en" hidden>4. Interactive Tabs &mdash; Show/Hide Effects</span>
+      </div>
+      <div class="project__body project__body--reverse">
+        <div class="project__mockup">
+          <div class="mockup-tabs-demo">
+            <div class="mockup-tabs-demo__bar">
+              <button class="mockup-tabs-demo__tab active" data-tab="1">🎨</button>
+              <button class="mockup-tabs-demo__tab" data-tab="2">⚙️</button>
+              <button class="mockup-tabs-demo__tab" data-tab="3">📱</button>
+            </div>
+            <div class="mockup-tabs-demo__content">
+              <div class="mockup-tabs-demo__panel active" data-panel="1">
+                <div class="mockup-tabs-demo__shape"></div>
+                <div class="mockup-tabs-demo__shape"></div>
+                <div class="mockup-tabs-demo__shape"></div>
+              </div>
+              <div class="mockup-tabs-demo__panel" data-panel="2">
+                <div class="mockup-tabs-demo__gear"></div>
+              </div>
+              <div class="mockup-tabs-demo__panel" data-panel="3">
+                <div class="mockup-tabs-demo__phone"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project4.subtitle"><span lang="ar">تفاعل ذكي مع المستخدم</span><span lang="en" hidden>Smart User Interaction</span></h4>
+          <p data-i18n="project4.desc"><span lang="ar">واجهة تابات تفاعلية تسمح للعميل بعرض وإخفاء المحتوى بتأثيرات سلسة. ضغطة واحدة تظهر التأثيرات البصرية، وضغطة أخرى تخفيها - كل ذلك بجافا سكريبت نقي وسي إس إس محسّن.</span><span lang="en" hidden>Interactive tabs interface letting clients show/hide content with smooth effects. One click reveals visual effects, another hides them - all with pure JavaScript and optimized CSS.</span></p>
+          <div class="project__tags">
+            <span>JavaScript</span><span>CSS Animations</span><span>DOM</span><span>Interactive</span>
+          </div>
+          <a href="project-4.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-4.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 5: Quiz/Carousel -->
+    <article class="project" data-project="5">
+      <div class="project__header" data-i18n="project5.title">
+        <span lang="ar">٥. استبيان تفاعلي + كاروسيل صور وهوية</span>
+        <span lang="en" hidden>5. Interactive Quiz + Image Carousel & Branding</span>
+      </div>
+      <div class="project__body">
+        <div class="project__mockup">
+          <div class="mockup-quiz">
+            <div class="mockup-quiz__question" data-i18n="project5.q">
+              <span lang="ar">ما هو المجال الذي تهتم به؟</span>
+              <span lang="en" hidden>Which field interests you?</span>
+            </div>
+            <div class="mockup-quiz__options">
+              <label><input type="radio" name="quiz"> <span lang="ar">تطوير ويب</span><span lang="en" hidden>Web Dev</span></label>
+              <label><input type="radio" name="quiz"> <span lang="ar">تصميم</span><span lang="en" hidden>Design</span></label>
+              <label><input type="radio" name="quiz"> <span lang="ar">تسويق</span><span lang="en" hidden>Marketing</span></label>
+              <label><input type="radio" name="quiz"> <span lang="ar">تقنية</span><span lang="en" hidden>Technology</span></label>
+            </div>
+          </div>
+          <div class="mockup-carousel">
+            <div class="mockup-carousel__track">
+              <img src="https://picsum.photos/seed/logo1/80/80" alt="Logo 1" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo2/80/80" alt="Logo 2" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo3/80/80" alt="Logo 3" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo4/80/80" alt="Logo 4" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo5/80/80" alt="Logo 5" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo6/80/80" alt="Logo 6" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo7/80/80" alt="Logo 7" class="mockup-carousel__logo" loading="lazy">
+              <img src="https://picsum.photos/seed/logo8/80/80" alt="Logo 8" class="mockup-carousel__logo" loading="lazy">
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project5.subtitle"><span lang="ar">بيانات + هوية بصرية</span><span lang="en" hidden>Data + Visual Identity</span></h4>
+          <p data-i18n="project5.desc"><span lang="ar">نموذج تحويل البيانات إلى أسئلة اختيار متعدد مع واجهة استبيان تفاعلية، بالإضافة إلى كاروسيل دائري يعرض الشعارات والصور المصممة بطريقة احترافية وأنيقة.</span><span lang="en" hidden>A data-to-quiz transformation with interactive multi-choice interface, plus a circular carousel showcasing designed logos and images in a professional, elegant manner.</span></p>
+          <div class="project__tags">
+            <span>JavaScript</span><span>CSS Carousel</span><span>Forms</span><span>Animation</span>
+          </div>
+          <a href="project-5.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-5.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 6: Auth/Verification System -->
+    <article class="project" data-project="6">
+      <div class="project__header" data-i18n="project6.title">
+        <span lang="ar">٦. نظام التحقق &mdash; تسجيل دخول + كود تأكيد</span>
+        <span lang="en" hidden>6. Verification System &mdash; Login + OTP Code</span>
+      </div>
+      <div class="project__body">
+        <div class="project__mockup">
+          <div class="mockup-auth" id="authApp">
+            <div class="mockup-auth__tabs">
+              <button class="mockup-auth__tab active" data-auth-tab="login"><span lang="ar">تسجيل دخول</span><span lang="en" hidden>Login</span></button>
+              <button class="mockup-auth__tab" data-auth-tab="register"><span lang="ar">حساب جديد</span><span lang="en" hidden>Register</span></button>
+            </div>
+            <div class="mockup-auth__panels">
+              <div class="mockup-auth__panel active" data-auth-panel="login">
+                <div class="mockup-auth__field">
+                  <input type="email" id="authLoginEmail" placeholder="Email" class="mockup-auth__input">
+                </div>
+                <div class="mockup-auth__field">
+                  <input type="password" id="authLoginPass" placeholder="Password" class="mockup-auth__input">
+                </div>
+                <button class="mockup-auth__submit" id="authLoginBtn"><span lang="ar">تسجيل دخول</span><span lang="en" hidden>Login</span></button>
+                <div class="mockup-auth__hint" id="authLoginHint"></div>
+              </div>
+              <div class="mockup-auth__panel" data-auth-panel="register">
+                <div class="mockup-auth__field">
+                  <input type="email" id="authRegEmail" placeholder="Email" class="mockup-auth__input">
+                </div>
+                <div class="mockup-auth__field">
+                  <input type="tel" id="authRegPhone" placeholder="Phone (optional)" class="mockup-auth__input">
+                </div>
+                <div class="mockup-auth__field">
+                  <input type="password" id="authRegPass" placeholder="Password" class="mockup-auth__input">
+                </div>
+                <div class="mockup-auth__method">
+                  <span lang="ar">طريقة التأكيد:</span><span lang="en" hidden>Verify via:</span>
+                  <label class="mockup-auth__radio"><input type="radio" name="authMethod" value="email" checked> <span lang="ar">بريد</span><span lang="en" hidden>Email</span></label>
+                  <label class="mockup-auth__radio"><input type="radio" name="authMethod" value="phone"> <span lang="ar">هاتف</span><span lang="en" hidden>Phone</span></label>
+                </div>
+                <button class="mockup-auth__submit" id="authRegBtn"><span lang="ar">إنشاء حساب</span><span lang="en" hidden>Create Account</span></button>
+                <div class="mockup-auth__hint" id="authRegHint"></div>
+              </div>
+            </div>
+            <div class="mockup-auth__verify" id="authVerifyBox">
+              <p class="mockup-auth__verify-title"><span lang="ar">أدخل رمز التأكيد</span><span lang="en" hidden>Enter verification code</span></p>
+              <p class="mockup-auth__verify-sub" id="authVerifySub"></p>
+              <div class="mockup-auth__verify-codes" id="authVerifyCodes">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="0">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="1">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="2">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="3">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="4">
+                <input maxlength="1" class="mockup-auth__code-input" data-idx="5">
+              </div>
+              <button class="mockup-auth__submit" id="authVerifyBtn"><span lang="ar">تأكيد</span><span lang="en" hidden>Verify</span></button>
+              <div class="mockup-auth__hint" id="authVerifyHint"><span lang="ar">رمز التجربة: 123456</span><span lang="en" hidden>Demo code: 123456</span></div>
+              <button class="mockup-auth__back" id="authBackBtn"><span lang="ar">عودة</span><span lang="en" hidden>Back</span></button>
+            </div>
+            <div class="mockup-auth__success" id="authSuccessBox">
+              <div class="mockup-auth__success-icon">✓</div>
+              <p class="mockup-auth__success-title"><span lang="ar">تم التحقق بنجاح!</span><span lang="en" hidden>Verified successfully!</span></p>
+              <p class="mockup-auth__success-email" id="authSuccessEmail"></p>
+            </div>
+          </div>
+        </div>
+        <div class="project__info">
+          <h4 data-i18n="project6.subtitle"><span lang="ar">نظام تحقق آمن للهوية</span><span lang="en" hidden>Secure Identity Verification</span></h4>
+          <p data-i18n="project6.desc"><span lang="ar">نظام كامل للتحقق من المستخدمين عبر البريد الإلكتروني أو الهاتف. يدعم إنشاء حساب، تسجيل دخول، وإرسال رمز تأكيد مكون من 6 أرقام. يتم تخزين البيانات بشكل آمن في قاعدة البيانات مع سياسات RLS.</span><span lang="en" hidden>A complete user verification system via email or phone. Supports account creation, login, and 6-digit confirmation code. Data is securely stored in the database with RLS policies.</span></p>
+          <div class="project__tags">
+            <span>JavaScript</span><span>InsForge DB</span><span>OTP</span><span>Auth</span><span>RLS</span>
+          </div>
+          <a href="project-6.html" class="btn project__link" lang="ar">عرض المشروع ←</a>
+          <a href="project-6.html" class="btn project__link" lang="en" hidden>View Project →</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="section" id="contact">
+  <div class="container">
+    <h2 class="section__title" data-i18n="contact.title"><span lang="ar">تواصل معي</span><span lang="en" hidden>Contact Me</span></h2>
+    <p class="section__sub" data-i18n="contact.sub"><span lang="ar">هل لديك مشروع؟ دعنا نناقشه</span><span lang="en" hidden>Have a project? Let's discuss it</span></p>
+    <div class="contact__grid">
+      <form class="contact__form" id="contactForm" novalidate>
+        <div class="form-group">
+          <label for="name" data-i18n="contact.name"><span lang="ar">الاسم</span><span lang="en" hidden>Name</span></label>
+          <input type="text" id="name" name="name" required minlength="2" autocomplete="name">
+          <span class="form-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="email" data-i18n="contact.email"><span lang="ar">البريد الإلكتروني</span><span lang="en" hidden>Email</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+          <span class="form-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="subject" data-i18n="contact.subject"><span lang="ar">الموضوع</span><span lang="en" hidden>Subject</span></label>
+          <input type="text" id="subject" name="subject">
+        </div>
+        <div class="form-group">
+          <label for="message" data-i18n="contact.message"><span lang="ar">الرسالة</span><span lang="en" hidden>Message</span></label>
+          <textarea id="message" name="message" required minlength="10" rows="5"></textarea>
+          <span class="form-error"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="contact.send">
+          <span lang="ar">إرسال الرسالة</span><span lang="en" hidden>Send Message</span>
+        </button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+      <div class="contact__info">
+        <div class="contact__social">
+          <a href="#" class="social-link" aria-label="GitHub">GitHub</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">LinkedIn</a>
+          <a href="#" class="social-link" aria-label="Twitter">Twitter</a>
+          <a href="#" class="social-link" aria-label="YouTube">YouTube</a>
+        </div>
+        <div class="contact__details">
+          <p><span lang="ar">متاح للمشاريع الحرة والتعاون</span><span lang="en" hidden>Available for freelance & collaboration</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2026 <span lang="ar">علاء محمد</span><span lang="en" hidden>Alaa Mohamed</span>. <span lang="ar">جميع الحقوق محفوظة</span><span lang="en" hidden>All rights reserved</span>.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

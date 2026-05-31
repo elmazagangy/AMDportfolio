@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title lang="ar">استبيان تفاعلي + كاروسيل صور وهوية | علاء محمد</title>
+  <title lang="en" hidden>Interactive Quiz + Image Carousel &amp; Branding | Alaa Mohamed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .project-page { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+    .project-page__back {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 24px; font-size: 0.9rem; color: var(--primary);
+      text-decoration: none; font-weight: 600;
+    }
+    .project-page__title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .project-page__sub { color: var(--text-muted); margin-bottom: 24px; }
+    .project-page__section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; margin-top: 32px; }
+
+    .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .feature-list li { padding: 10px 14px; background: var(--bg-alt); border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--card-border); }
+    .feature-list li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tags span { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-muted); }
+
+    /* Quiz Styles */
+    .quiz-container {
+      max-width: 480px; margin: 0 auto;
+    }
+    .quiz-progress {
+      display: flex; gap: 6px; margin-bottom: 16px; justify-content: center;
+    }
+    .quiz-progress__dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--card-border); transition: all 0.3s;
+    }
+    .quiz-progress__dot.active { background: var(--primary); transform: scale(1.3); }
+    .quiz-progress__dot.answered { background: #22c55e; }
+    .quiz-progress__dot.wrong { background: #ef4444; }
+
+    .quiz-card {
+      background: var(--bg-alt); border-radius: var(--radius);
+      border: 1px solid var(--card-border); padding: 24px;
+      margin-bottom: 12px;
+    }
+    .quiz-card__emoji { font-size: 2rem; text-align: center; margin-bottom: 8px; }
+    .quiz-card__question { font-weight: 700; font-size: 1rem; margin-bottom: 16px; text-align: center; }
+    .quiz-card__options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-card__option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 8px;
+      background: var(--input-bg); border: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
+    }
+    .quiz-card__option:hover { border-color: var(--primary); background: var(--primary-glow); }
+    .quiz-card__option.selected { border-color: var(--primary); background: var(--primary-glow); }
+    .quiz-card__option input { display: none; }
+    .quiz-card__option .radio-circle {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--text-muted); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .quiz-card__option.selected .radio-circle {
+      border-color: var(--primary); background: var(--primary);
+    }
+    .quiz-card__option.selected .radio-circle::after {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: white;
+    }
+
+    .quiz-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 480px; margin: 0 auto;
+    }
+    .quiz-nav button {
+      padding: 10px 24px; border-radius: 8px; font-weight: 600;
+      font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+      font-family: inherit; border: none;
+    }
+    .quiz-nav__prev {
+      background: var(--bg-alt); color: var(--text-muted);
+      border: 1px solid var(--card-border) !important;
+    }
+    .quiz-nav__prev:hover { background: var(--primary-glow); color: var(--primary); }
+    .quiz-nav__next {
+      background: var(--primary); color: white;
+    }
+    .quiz-nav__next:hover { background: var(--primary-hover); }
+    .quiz-nav__next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .quiz-counter {
+      font-size: 0.8rem; color: var(--text-muted); font-weight: 600;
+    }
+
+    .quiz-results {
+      display: none; max-width: 480px; margin: 0 auto;
+      text-align: center;
+    }
+    .quiz-results.show { display: block; }
+    .quiz-results__score {
+      font-size: 3rem; font-weight: 800; color: var(--primary);
+      margin: 16px 0;
+    }
+    .quiz-results__msg { font-size: 1rem; color: var(--text-muted); margin-bottom: 16px; }
+    .quiz-results__detail {
+      text-align: right; margin-bottom: 16px;
+    }
+    .quiz-results__item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; background: var(--bg-alt); border-radius: 8px;
+      margin-bottom: 6px; font-size: 0.85rem;
+    }
+    .quiz-results__item-icon { font-size: 1.2rem; margin-left: 8px; }
+    .quiz-results__item-correct { color: #22c55e; font-weight: 700; }
+    .quiz-results__item-wrong { color: #ef4444; font-weight: 700; }
+    .quiz-results__retry {
+      padding: 10px 32px; border-radius: 8px; font-weight: 600;
+      background: var(--primary); color: white; border: none;
+      cursor: pointer; font-family: inherit; font-size: 0.9rem;
+    }
+    .quiz-results__retry:hover { background: var(--primary-hover); }
+
+    /* Carousel Styles */
+    .carousel-container {
+      max-width: 480px; margin: 0 auto; position: relative;
+    }
+    .carousel-viewport {
+      overflow: hidden; border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+    }
+    .carousel-track {
+      display: flex; transition: transform 0.4s ease;
+    }
+    .carousel-slide {
+      min-width: 100%; height: 280px; flex-shrink: 0;
+      background: var(--bg-alt);
+    }
+    .carousel-slide img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .carousel-slide img[src=""] { display: none; }
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--bg-alt); border: 1px solid var(--card-border);
+      cursor: pointer; font-size: 1.2rem; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 2; color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .carousel-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .carousel-btn--prev { left: -12px; }
+    .carousel-btn--next { right: -12px; }
+    .device-frame.mobile .carousel-btn,
+    .device-frame.tablet .carousel-btn {
+      position: static; display: inline-flex; transform: none;
+    }
+    .device-frame.mobile .carousel-container,
+    .device-frame.tablet .carousel-container {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .device-frame.mobile .carousel-viewport,
+    .device-frame.tablet .carousel-viewport { flex: 1; min-width: 0; }
+    .device-frame.mobile .carousel-dots,
+    .device-frame.tablet .carousel-dots { width: 100%; justify-content: center; }
+    .carousel-dots {
+      display: flex; gap: 6px; justify-content: center; margin-top: 12px;
+    }
+    .carousel-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--card-border); border: none; cursor: pointer;
+      transition: all 0.3s; padding: 0;
+    }
+    .carousel-dot.active { background: var(--primary); transform: scale(1.3); }
+
+    .device-frame.mobile .carousel-slide { height: 180px; }
+    .device-frame.tablet .carousel-slide { height: 220px; }
+
+    @media (max-width: 600px) {
+      .feature-list { grid-template-columns: 1fr; }
+      .carousel-btn--prev { left: 4px; }
+      .carousel-btn--next { right: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="project-page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <a href="index.html" class="project-page__back">← <span lang="ar">العودة إلى المعرض</span><span lang="en" hidden>Back to Portfolio</span></a>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="langToggle" aria-label="English">EN</button>
+        <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+      </div>
+    </div>
+
+    <h1 class="project-page__title" lang="ar">استبيان تفاعلي + كاروسيل صور وهوية</h1>
+    <h1 class="project-page__title" lang="en" hidden>Interactive Quiz + Image Carousel &amp; Branding</h1>
+    <p class="project-page__sub" lang="ar">استبيان متعدد الاختيارات مع 4 أسئلة تصنيفية، وعرض صور متحرك مع تحكم كامل</p>
+    <p class="project-page__sub" lang="en" hidden>Multi-choice quiz with 4 categorized questions, plus a fully interactive image carousel</p>
+
+    <div class="device-switcher">
+      <button class="active" data-device="desktop"><span lang="ar">حاسوب</span><span lang="en" hidden>Desktop</span></button>
+      <button data-device="tablet"><span lang="ar">جهاز لوحي</span><span lang="en" hidden>Tablet</span></button>
+      <button data-device="mobile"><span lang="ar">جوال</span><span lang="en" hidden>Mobile</span></button>
+    </div>
+
+    <div class="device-frame desktop">
+      <div class="device-frame__bar">
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span style="flex:1;text-align:center;font-size:0.75rem;color:var(--text-muted)">quiz.demo</span>
+      </div>
+      <div class="device-frame__body">
+        <!-- Interactive Quiz -->
+        <div class="quiz-container" id="quizApp">
+          <div class="quiz-progress" id="quizProgress"></div>
+
+          <div class="quiz-card" id="quizCard">
+            <div class="quiz-card__emoji" id="quizEmoji"></div>
+            <div class="quiz-card__question" id="quizQuestion"></div>
+            <div class="quiz-card__options" id="quizOptions"></div>
+          </div>
+
+          <div class="quiz-nav">
+            <button class="quiz-nav__prev" id="quizPrev"><span lang="ar">السابق</span><span lang="en" hidden>Previous</span></button>
+            <span class="quiz-counter" id="quizCounter">1 / 4</span>
+            <button class="quiz-nav__next" id="quizNext" disabled><span lang="ar">التالي</span><span lang="en" hidden>Next</span></button>
+          </div>
+
+          <div class="quiz-results" id="quizResults">
+            <div class="quiz-card">
+              <div class="quiz-card__emoji">🏆</div>
+              <div class="quiz-card__question" id="resultsTitle" lang="ar">نتيجتك</div>
+              <div class="quiz-card__question" id="resultsTitleEn" lang="en" hidden>Your Score</div>
+              <div class="quiz-results__score" id="resultsScore">0/4</div>
+              <div class="quiz-results__msg" id="resultsMsg"></div>
+              <div class="quiz-results__detail" id="resultsDetail"></div>
+              <button class="quiz-results__retry" id="quizRetry"><span lang="ar">إعادة الاختبار</span><span lang="en" hidden>Retry Quiz</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Carousel -->
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--card-border);">
+          <div style="text-align:center;font-weight:700;font-size:0.95rem;margin-bottom:16px;">
+            <span lang="ar">📸 معرض الصور</span>
+            <span lang="en" hidden>📸 Image Showcase</span>
+          </div>
+          <div class="carousel-container" id="carouselApp">
+            <div class="carousel-viewport" dir="ltr">
+              <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <button class="carousel-btn carousel-btn--prev" id="carouselPrev">‹</button>
+            <button class="carousel-btn carousel-btn--next" id="carouselNext">›</button>
+            <div class="carousel-dots" id="carouselDots"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="project-page__section-title"><span lang="ar">نبذة عن المشروع</span><span lang="en" hidden>About the Project</span></h2>
+    <p lang="ar">نموذج متكامل يجمع بين استبيان تفاعلي متعدد الاختيارات وعرض صور دائري مع تحكم كامل. الاستبيان يتتبع إجابات المستخدم ويعرض النتائج مع التصحيح. الكاروسيل يدعم التنقل بالأزرار والنقاط الدالة مع صور عشوائية من picsum.photos.</p>
+    <p lang="en" hidden>A complete dual-demo page: an interactive multi-choice quiz that tracks answers and displays results with corrections, plus a circular image carousel with prev/next buttons and dot navigation using picsum.photos images.</p>
+
+    <ul class="feature-list">
+      <li lang="ar">4 أسئلة بتصنيفات مختلفة (سفر، موسيقى، طعام، ألعاب)</li><li lang="en" hidden>4 categorized questions (Travel, Music, Food, Gaming)</li>
+      <li lang="ar">تتبع الإجابات مع عرض النتيجة النهائية</li><li lang="en" hidden>Answer tracking with final score display</li>
+      <li lang="ar">إظهار الإجابات الصحيحة/الخاطئة في النتائج</li><li lang="en" hidden>Correct/wrong answer highlighting in results</li>
+      <li lang="ar">أزرار تنقل (السابق/التالي) مع تعطيل ذكي</li><li lang="en" hidden>Previous/Next navigation with smart disable</li>
+      <li lang="ar">شريط تقدم تفاعلي مع نقاط ملونة</li><li lang="en" hidden>Interactive progress bar with colored dots</li>
+      <li lang="ar">كاروسيل دائري مع أزرار يمين/يسار</li><li lang="en" hidden">Circular carousel with left/right navigation</li>
+      <li lang="ar">نقاط دالة على الموضع الحالي</li><li lang="en" hidden>Dot indicators for current position</li>
+      <li lang="ar">صور عشوائية من picsum.photos</li><li lang="en" hidden">Random images from picsum.photos</li>
+    </ul>
+
+    <div class="tags">
+      <span>HTML5</span><span>CSS3</span><span>Vanilla JS</span><span>Quiz</span><span>Carousel</span><span>Interactive</span>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      lang: localStorage.getItem('portfolio-lang') || 'en',
+      theme: localStorage.getItem('portfolio-theme') || 'light',
+    };
+    const html = document.documentElement;
+
+    /* ===== Quiz Data ===== */
+    const questions = [
+      {
+        emoji: '🌍',
+        text: { ar: 'ما هي وجهة السفر المفضلة لديك؟', en: 'What is your favorite travel destination?' },
+        options: [
+          { ar: 'شواطئ استوائية', en: 'Tropical Beaches' },
+          { ar: 'جبال وطبيعة', en: 'Mountains & Nature' },
+          { ar: 'مدن تاريخية', en: 'Historical Cities' },
+          { ar: 'مغامرات صحراوية', en: 'Desert Adventures' },
+        ],
+        correct: 1,
+      },
+      {
+        emoji: '🎵',
+        text: { ar: 'ما هو النوع الموسيقي المفضل لديك؟', en: 'What music genre do you prefer?' },
+        options: [
+          { ar: 'بوب', en: 'Pop' },
+          { ar: 'روك', en: 'Rock' },
+          { ar: 'كلاسيكي', en: 'Classical' },
+          { ar: 'إلكتروني', en: 'Electronic' },
+        ],
+        correct: 2,
+      },
+      {
+        emoji: '🍕',
+        text: { ar: 'ما هو طعامك المفضل؟', en: 'What is your favorite cuisine?' },
+        options: [
+          { ar: 'إيطالي', en: 'Italian' },
+          { ar: 'ياباني', en: 'Japanese' },
+          { ar: 'مكسيكي', en: 'Mexican' },
+          { ar: 'هندي', en: 'Indian' },
+        ],
+        correct: 0,
+      },
+      {
+        emoji: '🎮',
+        text: { ar: 'ما هو نوع الألعاب المفضل لديك؟', en: 'What type of games do you enjoy?' },
+        options: [
+          { ar: 'أكشن ومغامرات', en: 'Action & Adventure' },
+          { ar: 'استراتيجية', en: 'Strategy' },
+          { ar: 'رياضية', en: 'Sports' },
+          { ar: 'ألغاز وتفكير', en: 'Puzzles & Brain' },
+        ],
+        correct: 3,
+      },
+    ];
+
+    /* ===== Carousel Data ===== */
+    const carouselImages = [
+      'https://picsum.photos/seed/c1/640/360',
+      'https://picsum.photos/seed/c2/640/360',
+      'https://picsum.photos/seed/c3/640/360',
+      'https://picsum.photos/seed/c4/640/360',
+      'https://picsum.photos/seed/c5/640/360',
+    ];
+
+    /* ===== Quiz Logic ===== */
+    let currentQ = 0;
+    let answers = [];
+
+    function initQuiz() {
+      currentQ = 0;
+      answers = questions.map(() => -1);
+      document.getElementById('quizResults').classList.remove('show');
+      document.getElementById('quizApp').querySelector('.quiz-card').style.display = 'block';
+      document.querySelector('.quiz-nav').style.display = 'flex';
+      renderProgress();
+      renderQuestion();
+    }
+
+    function renderProgress() {
+      const container = document.getElementById('quizProgress');
+      container.innerHTML = questions.map((q, i) => {
+        let cls = 'quiz-progress__dot';
+        if (i === currentQ) cls += ' active';
+        else if (answers[i] >= 0) cls += ' answered';
+        return `<span class="${cls}" data-idx="${i}"></span>`;
+      }).join('');
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQ];
+      const lang = state.lang;
+      document.getElementById('quizEmoji').textContent = q.emoji;
+      document.getElementById('quizQuestion').textContent = q.text[lang];
+      document.getElementById('quizCounter').textContent = `${currentQ + 1} / ${questions.length}`;
+
+      const optsContainer = document.getElementById('quizOptions');
+      optsContainer.innerHTML = q.options.map((opt, i) => {
+        const selected = answers[currentQ] === i ? ' selected' : '';
+        return `
+          <label class="quiz-card__option${selected}">
+            <input type="radio" name="q${currentQ}" value="${i}" ${answers[currentQ] === i ? 'checked' : ''}>
+            <span class="radio-circle"></span>
+            <span>${opt[lang]}</span>
+          </label>
+        `;
+      }).join('');
+
+      optsContainer.querySelectorAll('.quiz-card__option').forEach(label => {
+        label.addEventListener('click', () => {
+          const radio = label.querySelector('input');
+          optsContainer.querySelectorAll('.quiz-card__option').forEach(el => el.classList.remove('selected'));
+          label.classList.add('selected');
+          radio.checked = true;
+          const val = parseInt(radio.value);
+          answers[currentQ] = val;
+          document.getElementById('quizNext').disabled = false;
+          renderProgress();
+        });
+      });
+
+      document.getElementById('quizPrev').style.display = currentQ === 0 ? 'none' : 'inline-block';
+      document.getElementById('quizNext').disabled = answers[currentQ] < 0;
+      const isLast = currentQ === questions.length - 1;
+      document.getElementById('quizNext').innerHTML = isLast
+        ? `<span lang="ar">عرض النتيجة</span><span lang="en" hidden>Show Result</span>`
+        : `<span lang="ar">التالي</span><span lang="en" hidden>Next</span>`;
+      applyLang();
+    }
+
+    function showResults() {
+      const lang = state.lang;
+      document.getElementById('quizApp').querySelector('.quiz-card').style.display = 'none';
+      document.querySelector('.quiz-nav').style.display = 'none';
+      document.getElementById('quizResults').classList.add('show');
+
+      const correctCount = answers.filter((a, i) => a === questions[i].correct).length;
+      document.getElementById('resultsScore').textContent = `${correctCount}/${questions.length}`;
+
+      const msgs = {
+        ar: correctCount === questions.length ? 'ممتاز! إجاباتك كلها صحيحة 🎉' :
+            correctCount >= 3 ? 'أحسنت! أداء رائع 👏' :
+            correctCount >= 2 ? 'نتيجة جيدة، حاول مرة أخرى 💪' : 'حاول مرة أخرى لتحسين نتيجتك 🤔',
+        en: correctCount === questions.length ? 'Perfect! All answers correct 🎉' :
+            correctCount >= 3 ? 'Great job! Excellent performance 👏' :
+            correctCount >= 2 ? 'Good result, try again 💪' : 'Try again to improve your score 🤔',
+      };
+      document.getElementById('resultsMsg').textContent = msgs[lang];
+
+      const detail = document.getElementById('resultsDetail');
+      detail.innerHTML = questions.map((q, i) => {
+        const isCorrect = answers[i] === q.correct;
+        const icon = isCorrect ? '✅' : '❌';
+        const cls = isCorrect ? 'quiz-results__item-correct' : 'quiz-results__item-wrong';
+        const userAns = answers[i] >= 0 ? q.options[answers[i]][lang] : (lang === 'ar' ? 'لم تجب' : 'No answer');
+        const correctAns = q.options[q.correct][lang];
+        return `
+          <div class="quiz-results__item">
+            <span><span class="quiz-results__item-icon">${q.emoji}</span> ${q.text[lang]}</span>
+            <span class="${cls}">${icon} ${userAns === correctAns ? userAns : (lang === 'ar' ? 'إجابتك: ' + userAns + ' | الصحيح: ' + correctAns : 'Your: ' + userAns + ' | Correct: ' + correctAns)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('quizNext').addEventListener('click', () => {
+      if (currentQ < questions.length - 1) {
+        currentQ++;
+        renderProgress();
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    document.getElementById('quizPrev').addEventListener('click', () => {
+      if (currentQ > 0) {
+        currentQ--;
+        renderProgress();
+        renderQuestion();
+      }
+    });
+
+    document.getElementById('quizRetry').addEventListener('click', initQuiz);
+
+    /* ===== Carousel Logic ===== */
+    let carouselIdx = 0;
+
+    function initCarousel() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = carouselImages.map((src, i) =>
+        `<div class="carousel-slide"><img src="${src}" alt="Slide ${i + 1}" onerror="this.parentElement.style.background='var(--bg-alt)';this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:2rem;\'>📷</div>'"></div>`
+      ).join('');
+
+      const dots = document.getElementById('carouselDots');
+      dots.innerHTML = carouselImages.map((_, i) =>
+        `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}"></button>`
+      ).join('');
+
+      dots.querySelectorAll('.carousel-dot').forEach(btn => {
+        btn.addEventListener('click', () => goToSlide(parseInt(btn.dataset.idx)));
+      });
+
+      goToSlide(0);
+    }
+
+    function goToSlide(idx) {
+      carouselIdx = idx;
+      const track = document.getElementById('carouselTrack');
+      track.style.transform = `translateX(-${idx * 100}%)`;
+      document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === idx);
+      });
+    }
+
+    document.getElementById('carouselPrev').addEventListener('click', () => {
+      goToSlide((carouselIdx - 1 + carouselImages.length) % carouselImages.length);
+    });
+
+    document.getElementById('carouselNext').addEventListener('click', () => {
+      goToSlide((carouselIdx + 1) % carouselImages.length);
+    });
+
+    /* ===== Language / Theme ===== */
+    function applyLang() {
+      document.querySelectorAll('[lang]').forEach(el => {
+        el.hidden = el.getAttribute('lang') !== state.lang;
+      });
+      const titleEl = document.querySelector('title[lang="' + state.lang + '"]');
+      if (titleEl) document.title = titleEl.textContent;
+    }
+
+    function setLang(lang) {
+      state.lang = lang;
+      html.lang = lang;
+      html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('portfolio-lang', lang);
+      document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'العربية';
+      renderQuestion();
+      applyLang();
+      if (document.getElementById('quizResults').classList.contains('show')) showResults();
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+    document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+    document.querySelectorAll('.device-switcher button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.device-switcher button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const frame = document.querySelector('.device-frame');
+        if (frame) frame.className = 'device-frame ' + btn.dataset.device;
+      });
+    });
+
+    /* ===== Init ===== */
+    setLang(state.lang);
+    setTheme(state.theme);
+    initQuiz();
+    initCarousel();
+  </script>
+</body>
+</html>

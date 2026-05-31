@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title lang="ar">تبويبات تفاعلية — إظهار/إخفاء بتأثيرات | علاء محمد</title>
+  <title lang="en" hidden>Interactive Tabs — Show/Hide Effects | Alaa Mohamed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .project-page { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+    .project-page__back {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 24px; font-size: 0.9rem; color: var(--primary);
+      text-decoration: none; font-weight: 600;
+    }
+    .project-page__title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .project-page__sub { color: var(--text-muted); margin-bottom: 24px; }
+    .project-page__section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; margin-top: 32px; }
+
+    .device-switcher { display: flex; gap: 8px; margin-bottom: 16px; justify-content: center; }
+    .device-switcher button {
+      padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+      border: 1px solid var(--card-border); background: var(--bg-alt);
+      color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-family: inherit;
+    }
+    .device-switcher button.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .device-frame { border: 2px solid var(--card-border); border-radius: var(--radius); overflow: hidden; width: 100%; transition: all 0.4s ease; }
+    .device-frame.desktop { max-width: 640px; }
+    .device-frame.tablet { max-width: 420px; }
+    .device-frame.mobile { max-width: 320px; }
+    .device-frame__bar { background: var(--bg-alt); padding: 6px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--card-border); }
+    .device-frame__dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .device-frame__dot:nth-child(2) { background: #eab308; }
+    .device-frame__dot:nth-child(3) { background: #22c55e; }
+    .device-frame__body { padding: 16px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tags span { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-muted); }
+
+    .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .feature-list li { padding: 10px 14px; background: var(--bg-alt); border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--card-border); }
+    .feature-list li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+
+    /* ===== TABS DEMO ===== */
+    .tabs-demo { width: 100%; }
+    .tabs-demo__nav {
+      display: flex; gap: 4px; margin-bottom: 16px;
+      background: var(--bg-alt); border-radius: 10px; padding: 4px;
+      border: 1px solid var(--card-border);
+    }
+    .tabs-demo__nav-btn {
+      flex: 1; padding: 10px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+      border: none; background: transparent; color: var(--text-muted); cursor: pointer;
+      transition: all 0.3s; font-family: inherit; position: relative;
+    }
+    .tabs-demo__nav-btn:hover { color: var(--text); background: var(--primary-glow); }
+    .tabs-demo__nav-btn.active {
+      background: var(--primary); color: white; box-shadow: 0 2px 12px var(--primary-glow);
+    }
+    .tabs-demo__nav-btn .tab-icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
+    .tabs-demo__nav-btn .tab-label { font-size: 0.65rem; opacity: 0.9; }
+
+    .tabs-demo__panels { position: relative; min-height: 280px; }
+    .tabs-demo__panel {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(12px) scale(0.97);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none; visibility: hidden;
+    }
+    .tabs-demo__panel.active {
+      position: relative; opacity: 1; transform: translateY(0) scale(1);
+      pointer-events: auto; visibility: visible;
+    }
+
+    /* Tab 1 — Designs */
+    .tab-designs { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; padding: 20px 0; min-height: 200px; }
+    .tab-designs__shape {
+      width: 80px; height: 80px; border-radius: 16px;
+      animation: tabPulse 2s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: white; font-weight: 700;
+    }
+    .tab-designs__shape:nth-child(1) { background: linear-gradient(135deg, #6C63FF, #a78bfa); animation-delay: 0s; }
+    .tab-designs__shape:nth-child(2) { background: linear-gradient(135deg, #FF6584, #fb7185); animation-delay: 0.3s; border-radius: 50%; }
+    .tab-designs__shape:nth-child(3) { background: linear-gradient(135deg, #43E97B, #34d399); animation-delay: 0.6s; border-radius: 8px; transform-origin: center; }
+
+    @keyframes tabPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    /* Tab 2 — Stats / Progress Bars */
+    .tab-stats { padding: 20px 0; display: flex; flex-direction: column; gap: 18px; }
+    .tab-stats__item { display: flex; flex-direction: column; gap: 6px; }
+    .tab-stats__label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; }
+    .tab-stats__bar {
+      height: 20px; background: var(--bg-alt); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+    .tab-stats__fill {
+      height: 100%; border-radius: 10px; width: 0;
+      transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex; align-items: center; justify-content: flex-end; padding: 0 8px;
+      font-size: 0.65rem; color: white; font-weight: 700;
+    }
+    .tab-stats__fill.animated { }
+    .tab-stats__fill--html { background: linear-gradient(90deg, #e34f26, #f06529); }
+    .tab-stats__fill--css { background: linear-gradient(90deg, #264de4, #2965f1); }
+    .tab-stats__fill--js { background: linear-gradient(90deg, #f7df1e, #f0db4f); color: #333; }
+    .tab-stats__fill--react { background: linear-gradient(90deg, #61dafb, #00d8ff); color: #333; }
+
+    /* Tab 3 — Gallery */
+    .tab-gallery { padding: 8px 0; }
+    .tab-gallery__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tab-gallery__img {
+      width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+    }
+    .tab-gallery__img:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+    /* Tab 4 — Icons */
+    .tab-icons { padding: 12px 0; }
+    .tab-icons__grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    }
+    .tab-icons__item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 16px 8px; background: var(--bg-alt); border-radius: 10px;
+      border: 1px solid var(--card-border); cursor: pointer;
+      transition: all 0.3s; font-size: 0.7rem; color: var(--text-muted);
+    }
+    .tab-icons__item .icon-emoji { font-size: 2rem; transition: transform 0.3s; }
+    .tab-icons__item:hover { border-color: var(--primary); background: var(--primary-glow); transform: translateY(-4px); }
+    .tab-icons__item:hover .icon-emoji { transform: scale(1.3) rotate(8deg); }
+
+    .device-frame.mobile .tabs-demo__nav { flex-wrap: wrap; }
+    .device-frame.mobile .tabs-demo__nav-btn { flex: 1 0 45%; }
+    .device-frame.mobile .tab-icons__grid { grid-template-columns: repeat(3, 1fr); }
+    .device-frame.mobile .tab-gallery__grid { grid-template-columns: repeat(2, 1fr); }
+
+    @media (max-width: 600px) {
+      .feature-list { grid-template-columns: 1fr; }
+      .tabs-demo__nav { flex-wrap: wrap; }
+      .tabs-demo__nav-btn { flex: 1 0 45%; }
+      .tab-icons__grid { grid-template-columns: repeat(3, 1fr); }
+      .tab-gallery__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="project-page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <a href="index.html" class="project-page__back">← <span lang="ar">العودة إلى المعرض</span><span lang="en" hidden>Back to Portfolio</span></a>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="langToggle" aria-label="English">EN</button>
+        <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+      </div>
+    </div>
+
+    <h1 class="project-page__title" lang="ar">تبويبات تفاعلية — إظهار/إخفاء بتأثيرات</h1>
+    <h1 class="project-page__title" lang="en" hidden>Interactive Tabs — Show/Hide with Effects</h1>
+    <p class="project-page__sub" lang="ar">عرض وإخفاء المحتوى بتأثيرات سلاسة — تصاميم، إحصائيات، صور، أيقونات</p>
+    <p class="project-page__sub" lang="en" hidden>Show and hide content with smooth effects — Designs, Stats, Gallery, Icons</p>
+
+    <div class="device-switcher">
+      <button class="active" data-device="desktop"><span lang="ar">حاسوب</span><span lang="en" hidden>Desktop</span></button>
+      <button data-device="tablet"><span lang="ar">جهاز لوحي</span><span lang="en" hidden>Tablet</span></button>
+      <button data-device="mobile"><span lang="ar">جوال</span><span lang="en" hidden>Mobile</span></button>
+    </div>
+
+    <div class="device-frame desktop">
+      <div class="device-frame__bar">
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span style="flex:1;text-align:center;font-size:0.75rem;color:var(--text-muted)">tabs.demo</span>
+      </div>
+      <div class="device-frame__body">
+        <div class="tabs-demo" id="tabsDemo">
+          <div class="tabs-demo__nav">
+            <button class="tabs-demo__nav-btn active" data-tab="1">
+              <span class="tab-icon">🎨</span>
+              <span class="tab-label" lang="ar">تصاميم</span>
+              <span class="tab-label" lang="en" hidden>Designs</span>
+            </button>
+            <button class="tabs-demo__nav-btn" data-tab="2">
+              <span class="tab-icon">📊</span>
+              <span class="tab-label" lang="ar">إحصائيات</span>
+              <span class="tab-label" lang="en" hidden>Stats</span>
+            </button>
+            <button class="tabs-demo__nav-btn" data-tab="3">
+              <span class="tab-icon">🖼️</span>
+              <span class="tab-label" lang="ar">صور</span>
+              <span class="tab-label" lang="en" hidden>Gallery</span>
+            </button>
+            <button class="tabs-demo__nav-btn" data-tab="4">
+              <span class="tab-icon">😎</span>
+              <span class="tab-label" lang="ar">أيقونات</span>
+              <span class="tab-label" lang="en" hidden>Icons</span>
+            </button>
+          </div>
+
+          <div class="tabs-demo__panels">
+            <!-- Tab 1: Designs -->
+            <div class="tabs-demo__panel active" data-panel="1">
+              <div class="tab-designs">
+                <div class="tab-designs__shape">⬡</div>
+                <div class="tab-designs__shape">●</div>
+                <div class="tab-designs__shape">■</div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Stats -->
+            <div class="tabs-demo__panel" data-panel="2">
+              <div class="tab-stats" id="tabStats">
+                <div class="tab-stats__item">
+                  <div class="tab-stats__label">
+                    <span>HTML</span>
+                    <span class="tab-stats__val">95%</span>
+                  </div>
+                  <div class="tab-stats__bar">
+                    <div class="tab-stats__fill tab-stats__fill--html" data-width="95" style="width:0%">95%</div>
+                  </div>
+                </div>
+                <div class="tab-stats__item">
+                  <div class="tab-stats__label">
+                    <span>CSS</span>
+                    <span class="tab-stats__val">88%</span>
+                  </div>
+                  <div class="tab-stats__bar">
+                    <div class="tab-stats__fill tab-stats__fill--css" data-width="88" style="width:0%">88%</div>
+                  </div>
+                </div>
+                <div class="tab-stats__item">
+                  <div class="tab-stats__label">
+                    <span>JavaScript</span>
+                    <span class="tab-stats__val">76%</span>
+                  </div>
+                  <div class="tab-stats__bar">
+                    <div class="tab-stats__fill tab-stats__fill--js" data-width="76" style="width:0%">76%</div>
+                  </div>
+                </div>
+                <div class="tab-stats__item">
+                  <div class="tab-stats__label">
+                    <span>React</span>
+                    <span class="tab-stats__val">62%</span>
+                  </div>
+                  <div class="tab-stats__bar">
+                    <div class="tab-stats__fill tab-stats__fill--react" data-width="62" style="width:0%">62%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 3: Gallery -->
+            <div class="tabs-demo__panel" data-panel="3">
+              <div class="tab-gallery">
+                <div class="tab-gallery__grid" id="tabGallery">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab1/300/300" alt="" loading="lazy">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab2/300/300" alt="" loading="lazy">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab3/300/300" alt="" loading="lazy">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab4/300/300" alt="" loading="lazy">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab5/300/300" alt="" loading="lazy">
+                  <img class="tab-gallery__img" src="https://picsum.photos/seed/tab6/300/300" alt="" loading="lazy">
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 4: Icons -->
+            <div class="tabs-demo__panel" data-panel="4">
+              <div class="tab-icons">
+                <div class="tab-icons__grid">
+                  <div class="tab-icons__item"><span class="icon-emoji">🔥</span><span lang="ar">نار</span><span lang="en" hidden>Fire</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">⭐</span><span lang="ar">نجمة</span><span lang="en" hidden>Star</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">❤️</span><span lang="ar">حب</span><span lang="en" hidden>Love</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">💡</span><span lang="ar">فكرة</span><span lang="en" hidden>Idea</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">🚀</span><span lang="ar">انطلاق</span><span lang="en" hidden>Launch</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">🎯</span><span lang="ar">هدف</span><span lang="en" hidden>Target</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">🌈</span><span lang="ar">قوس قزح</span><span lang="en" hidden>Rainbow</span></div>
+                  <div class="tab-icons__item"><span class="icon-emoji">⚡</span><span lang="ar">صاعقة</span><span lang="en" hidden>Lightning</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="project-page__section-title"><span lang="ar">نبذة عن المشروع</span><span lang="en" hidden>About the Project</span></h2>
+    <p lang="ar">نظام تبويبات تفاعلي يتيح عرض وإخفاء المحتوى بتأثيرات حركية سلسة (fade + slide). أربعة أقسام: تصاميم متحركة، إحصائيات مع أشرطة تقدم متحركة، معرض صور مصغّر، وشبكة أيقونات إيموجي مع تأثيرات hover. يعمل كله بجافا سكريبت نقي وسي إس إس بدون مكتبات.</p>
+    <p lang="en" hidden>An interactive tab system that shows and hides content with smooth animation effects (fade + slide). Four sections: animated designs, stats with animated progress bars, mini image gallery, and emoji icon grid with hover effects. All powered by pure JavaScript and CSS with no libraries.</p>
+
+    <ul class="feature-list">
+      <li lang="ar">تبديل تبويبات بتأثير fade+slide</li><li lang="en" hidden>Tab switching with fade+slide effect</li>
+      <li lang="ar">أشرطة تقدم متحركة عند الظهور</li><li lang="en" hidden>Animated progress bars on reveal</li>
+      <li lang="ar">أشكال هندسية نابضة (pulse)</li><li lang="en" hidden>Pulsing geometric shapes</li>
+      <li lang="ar">معرض صور شبكي بتأثير zoom</li><li lang="en" hidden>Image gallery grid with zoom effect</li>
+      <li lang="ar">أيقونات إيموجي مع hover effects</li><li lang="en" hidden>Emoji icons with hover effects</li>
+      <li lang="ar">كود نقي بدون أي مكتبات خارجية</li><li lang="en" hidden>Pure code with no external libraries</li>
+    </ul>
+
+    <div class="tags">
+      <span>HTML5</span><span>CSS Animations</span><span>@keyframes</span><span>JavaScript</span><span>Tabs</span><span>DOM</span>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      lang: localStorage.getItem('portfolio-lang') || 'en',
+      theme: localStorage.getItem('portfolio-theme') || 'light',
+    };
+    const html = document.documentElement;
+
+    function setLang(lang) {
+      state.lang = lang;
+      html.lang = lang;
+      html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('portfolio-lang', lang);
+      document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'العربية';
+      document.querySelectorAll('[lang]').forEach(el => { el.hidden = el.getAttribute('lang') !== lang; });
+      const titleEl = document.querySelector('title[lang="' + lang + '"]');
+      if (titleEl) document.title = titleEl.textContent;
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    function switchTab(tabIndex) {
+      state.activeTab = tabIndex;
+      document.querySelectorAll('.tabs-demo__nav-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.tab) === tabIndex));
+      document.querySelectorAll('.tabs-demo__panel').forEach(p => p.classList.toggle('active', parseInt(p.dataset.panel) === tabIndex));
+      if (tabIndex === 2) animateStats();
+    }
+
+    function animateStats() {
+      if (state.statsAnimated) return;
+      state.statsAnimated = true;
+      const fills = document.querySelectorAll('.tab-stats__fill');
+      fills.forEach((fill, i) => {
+        setTimeout(() => {
+          fill.style.width = fill.dataset.width + '%';
+        }, i * 150);
+      });
+    }
+
+    function resetStats() {
+      state.statsAnimated = false;
+      document.querySelectorAll('.tab-stats__fill').forEach(f => { f.style.width = '0%'; });
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+    document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+    document.querySelectorAll('.tabs-demo__nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(parseInt(btn.dataset.tab));
+      });
+    });
+
+    document.querySelectorAll('.device-switcher button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.device-switcher button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const frame = document.querySelector('.device-frame');
+        if (frame) frame.className = 'device-frame ' + btn.dataset.device;
+      });
+    });
+
+    setLang(state.lang);
+    setTheme(state.theme);
+    switchTab(1);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title lang="en">Authentication System — Login + Email Verification | Alaa Mohamed</title>
+  <title lang="ar" hidden>نظام التحقق — تسجيل الدخول + تأكيد البريد | علاء محمد</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .project-page { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+    .project-page__back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; font-size: 0.9rem; color: var(--primary); text-decoration: none; font-weight: 600; }
+    .project-page__title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .project-page__sub { color: var(--text-muted); margin-bottom: 24px; }
+    .project-page__section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; margin-top: 32px; }
+    .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .feature-list li { padding: 10px 14px; background: var(--bg-alt); border-radius: 8px; font-size: 0.9rem; border: 1px solid var(--card-border); }
+    .feature-list li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tags span { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-muted); }
+
+    .device-switcher { display: flex; gap: 8px; margin-bottom: 16px; justify-content: center; }
+    .device-switcher button { padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--card-border); background: var(--bg-alt); color: var(--text-muted); cursor: pointer; transition: all 0.3s; font-family: inherit; }
+    .device-switcher button.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .device-frame { border: 2px solid var(--card-border); border-radius: var(--radius); overflow: hidden; width: 100%; transition: all 0.4s ease; }
+    .device-frame.desktop { max-width: 640px; }
+    .device-frame.tablet { max-width: 420px; }
+    .device-frame.mobile { max-width: 320px; }
+    .device-frame__bar { background: var(--bg-alt); padding: 6px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--card-border); }
+    .device-frame__dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .device-frame__dot:nth-child(2) { background: #eab308; }
+    .device-frame__dot:nth-child(3) { background: #22c55e; }
+    .device-frame__body { padding: 16px; display: flex; justify-content: center; }
+
+    [data-theme="dark"] .device-frame { border-color: #333; }
+
+    .device-frame.mobile .auth-card { padding: 16px; }
+    .device-frame.mobile .auth-card__title { font-size: 1rem; }
+    .device-frame.mobile .auth-input { padding: 8px 10px; font-size: 0.8rem; }
+    .device-frame.mobile .auth-btn { padding: 8px; font-size: 0.8rem; }
+    .device-frame.mobile .auth-otp-input { width: 32px; height: 36px; font-size: 0.95rem; }
+    .device-frame.mobile .auth-otp-row { gap: 4px; }
+    .device-frame.mobile .auth-oauth-btn { padding: 8px 12px; font-size: 0.75rem; }
+
+    @media (max-width: 600px) {
+      .feature-list { grid-template-columns: 1fr; }
+    }
+
+    .auth-wrapper {
+      width: 100%; max-width: 400px;
+    }
+    .auth-card {
+      background: var(--bg-alt); border-radius: var(--radius);
+      border: 1px solid var(--card-border); padding: 28px 24px;
+    }
+    .auth-card__title {
+      font-size: 1.15rem; font-weight: 700; text-align: center;
+      margin-bottom: 4px;
+    }
+    .auth-card__sub {
+      font-size: 0.8rem; color: var(--text-muted);
+      text-align: center; margin-bottom: 20px;
+    }
+    .auth-field { margin-bottom: 14px; }
+    .auth-field label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 4px; color: var(--text-muted);
+    }
+    .auth-input {
+      width: 100%; padding: 10px 14px; border-radius: 6px;
+      border: 1px solid var(--input-border); background: var(--input-bg);
+      color: var(--text); font-size: 0.85rem; font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .auth-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    .auth-input.error { border-color: #ef4444; }
+    .auth-input.success { border-color: #22c55e; }
+    .auth-error {
+      font-size: 0.72rem; color: #ef4444; margin-top: 3px;
+      min-height: 16px; display: block;
+    }
+    .auth-pw-strength {
+      display: flex; gap: 3px; margin-top: 4px;
+    }
+    .auth-pw-bar {
+      height: 3px; flex: 1; border-radius: 2px;
+      background: var(--input-border); transition: background 0.3s;
+    }
+    .auth-pw-bar.active.weak { background: #ef4444; }
+    .auth-pw-bar.active.medium { background: #eab308; }
+    .auth-pw-bar.active.strong { background: #22c55e; }
+    .auth-pw-text { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+    .auth-btn {
+      width: 100%; padding: 10px; border-radius: 6px;
+      background: var(--primary); color: white; font-weight: 600;
+      font-size: 0.85rem; border: none; cursor: pointer;
+      transition: background 0.2s, opacity 0.2s; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .auth-btn:hover { background: var(--primary-hover); }
+    .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-btn--outline {
+      background: transparent; color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .auth-btn--outline:hover { background: var(--primary-glow); }
+    .auth-btn--danger {
+      background: #ef4444;
+    }
+    .auth-btn--danger:hover { background: #dc2626; }
+
+    .auth-link {
+      text-align: center; font-size: 0.8rem; color: var(--text-muted);
+      margin-top: 14px;
+    }
+    .auth-link a {
+      color: var(--primary); cursor: pointer; font-weight: 600;
+    }
+    .auth-link a:hover { text-decoration: underline; }
+    .auth-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 16px 0; color: var(--text-muted); font-size: 0.75rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--card-border);
+    }
+    .auth-oauth { display: flex; gap: 8px; }
+    .auth-oauth-btn {
+      flex: 1; padding: 10px; border-radius: 6px;
+      border: 1px solid var(--card-border); background: var(--bg-alt);
+      cursor: pointer; font-size: 0.8rem; font-weight: 600;
+      transition: all 0.2s; font-family: inherit; color: var(--text);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .auth-oauth-btn:hover { background: var(--primary-glow); border-color: var(--primary); }
+    .auth-oauth-icon { font-size: 1.1rem; }
+
+    .auth-spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: authSpin 0.6s linear infinite; display: none;
+    }
+    .auth-btn.loading .auth-spinner { display: inline-block; }
+    .auth-btn.loading .auth-btn-text { display: none; }
+    @keyframes authSpin { to { transform: rotate(360deg); } }
+
+    .auth-otp-row {
+      display: flex; gap: 6px; justify-content: center; margin: 16px 0;
+    }
+    .auth-otp-input {
+      width: 40px; height: 44px; text-align: center; font-size: 1.15rem;
+      font-weight: 700; border: 2px solid var(--input-border);
+      border-radius: 6px; background: var(--input-bg); color: var(--text);
+      font-family: inherit; transition: border-color 0.2s;
+    }
+    .auth-otp-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    .auth-otp-input.filled { border-color: #22c55e; }
+    .auth-otp-input.error { border-color: #ef4444; }
+
+    .auth-resend { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; }
+    .auth-resend a { color: var(--primary); cursor: pointer; font-weight: 600; }
+    .auth-resend a:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-resend-timer { color: var(--text-muted); }
+
+    .auth-success {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 20px 0; text-align: center;
+    }
+    .auth-success__icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(34,197,94,0.15); color: #22c55e;
+      font-size: 1.6rem; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 12px;
+    }
+    .auth-success__title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+    .auth-success__sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    .auth-dashboard {
+      text-align: center; padding: 8px 0;
+    }
+    .auth-dashboard__avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--primary-glow); color: var(--primary);
+      font-size: 1.5rem; font-weight: 700; display: flex;
+      align-items: center; justify-content: center; margin: 0 auto 12px;
+    }
+    .auth-dashboard__email { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+    .auth-dashboard__name { font-weight: 700; font-size: 1.05rem; margin-bottom: 16px; }
+    .auth-dashboard__badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 600; margin-bottom: 16px;
+    }
+    .auth-dashboard__badge.verified { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .auth-dashboard__badge.unverified { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .auth-dashboard__actions { display: flex; gap: 8px; flex-direction: column; }
+
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
+
+    .auth-back {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 0.78rem; font-family: inherit;
+      padding: 0; margin-top: 10px; display: block; width: 100%; text-align: center;
+    }
+    .auth-back:hover { color: var(--primary); text-decoration: underline; }
+
+    .auth-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-card); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 10px 20px; font-size: 0.82rem;
+      box-shadow: var(--shadow-lg); z-index: 999;
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .auth-toast.show { opacity: 1; }
+    .auth-toast.success { border-left: 3px solid #22c55e; }
+    .auth-toast.error { border-left: 3px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="project-page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <a href="index.html" class="project-page__back">← <span lang="en">Back to Portfolio</span><span lang="ar" hidden>العودة إلى المعرض</span></a>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="langToggle" aria-label="العربية">AR</button>
+        <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+      </div>
+    </div>
+
+    <h1 class="project-page__title"><span lang="en">Authentication System</span><span lang="ar" hidden>نظام التحقق</span></h1>
+    <p class="project-page__sub"><span lang="en">Full auth with email verification, OTP, OAuth, and password reset</span><span lang="ar" hidden>نظام كامل مع تأكيد البريد، رمز التحقق، الدخول الموحد، واستعادة كلمة المرور</span></p>
+
+    <div class="device-switcher">
+      <button class="active" data-device="desktop"><span lang="en">Desktop</span><span lang="ar" hidden>حاسوب</span></button>
+      <button data-device="tablet"><span lang="en">Tablet</span><span lang="ar" hidden>جهاز لوحي</span></button>
+      <button data-device="mobile"><span lang="en">Mobile</span><span lang="ar" hidden>جوال</span></button>
+    </div>
+
+    <div class="device-frame desktop">
+      <div class="device-frame__bar">
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span style="flex:1;text-align:center;font-size:0.75rem;color:var(--text-muted)">auth.alaamohamed.dev</span>
+      </div>
+      <div class="device-frame__body">
+        <div class="auth-wrapper" id="authApp">
+
+          <!-- ===== PANEL: Sign In ===== -->
+          <div class="auth-panel active" id="panel-signin">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">Sign In</span><span lang="ar" hidden>تسجيل الدخول</span></div>
+              <div class="auth-card__sub"><span lang="en">Welcome back! Enter your credentials</span><span lang="ar" hidden">مرحباً بعودتك! أدخل بيانات الدخول</span></div>
+
+              <div class="auth-field">
+                <label><span lang="en">Email</span><span lang="ar" hidden>البريد الإلكتروني</span></label>
+                <input class="auth-input" id="si-email" type="email" autocomplete="email" placeholder="email@example.com" dir="ltr">
+                <span class="auth-error" id="si-email-err"></span>
+              </div>
+              <div class="auth-field">
+                <label><span lang="en">Password</span><span lang="ar" hidden>كلمة المرور</span></label>
+                <input class="auth-input" id="si-pass" type="password" autocomplete="current-password" dir="ltr">
+                <span class="auth-error" id="si-pass-err"></span>
+              </div>
+
+              <button class="auth-btn" id="si-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Sign In</span><span lang="ar" hidden>تسجيل الدخول</span></span>
+              </button>
+
+              <div class="auth-divider"><span lang="en">or continue with</span><span lang="ar" hidden>أو تابع بواسطة</span></div>
+              <div class="auth-oauth">
+                <button class="auth-oauth-btn" data-oauth="google"><span class="auth-oauth-icon">G</span> Google</button>
+                <button class="auth-oauth-btn" data-oauth="github"><span class="auth-oauth-icon">GH</span> GitHub</button>
+              </div>
+
+              <div class="auth-link">
+                <span lang="en">Don't have an account?</span><span lang="ar" hidden>ليس لديك حساب؟</span>
+                <a id="si-to-reg"><span lang="en">Create one</span><span lang="ar" hidden>إنشاء حساب</span></a>
+              </div>
+              <div class="auth-link">
+                <a id="si-to-forgot"><span lang="en">Forgot password?</span><span lang="ar" hidden>نسيت كلمة المرور؟</span></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Sign Up ===== -->
+          <div class="auth-panel" id="panel-register">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">Create Account</span><span lang="ar" hidden>إنشاء حساب</span></div>
+              <div class="auth-card__sub"><span lang="en">Fill in the details to get started</span><span lang="ar" hidden>املأ البيانات للبدء</span></div>
+
+              <div class="auth-field">
+                <label><span lang="en">Full Name</span><span lang="ar" hidden>الاسم الكامل</span></label>
+                <input class="auth-input" id="reg-name" type="text" autocomplete="name">
+                <span class="auth-error" id="reg-name-err"></span>
+              </div>
+              <div class="auth-field">
+                <label><span lang="en">Email</span><span lang="ar" hidden>البريد الإلكتروني</span></label>
+                <input class="auth-input" id="reg-email" type="email" autocomplete="email" placeholder="email@example.com" dir="ltr">
+                <span class="auth-error" id="reg-email-err"></span>
+              </div>
+              <div class="auth-field">
+                <label><span lang="en">Password</span><span lang="ar" hidden>كلمة المرور</span></label>
+                <input class="auth-input" id="reg-pass" type="password" autocomplete="new-password" dir="ltr">
+                <div class="auth-pw-strength" id="pw-strength">
+                  <div class="auth-pw-bar" data-idx="0"></div>
+                  <div class="auth-pw-bar" data-idx="1"></div>
+                  <div class="auth-pw-bar" data-idx="2"></div>
+                </div>
+                <span class="auth-pw-text" id="pw-text"><span lang="en">Min 6 chars, number, upper, lower, special</span><span lang="ar" hidden>6 أحرف، رقم، كبير، صغير، رمز خاص</span></span>
+                <span class="auth-error" id="reg-pass-err"></span>
+              </div>
+
+              <button class="auth-btn" id="reg-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Create Account</span><span lang="ar" hidden>إنشاء حساب</span></span>
+              </button>
+
+              <div class="auth-link">
+                <span lang="en">Already have an account?</span><span lang="ar" hidden>لديك حساب بالفعل؟</span>
+                <a id="reg-to-si"><span lang="en">Sign in</span><span lang="ar" hidden>تسجيل الدخول</span></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Verify Email (OTP) ===== -->
+          <div class="auth-panel" id="panel-verify">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">Verify Your Email</span><span lang="ar" hidden>تأكيد البريد الإلكتروني</span></div>
+              <div class="auth-card__sub">
+                <span lang="en">Enter the 6-digit code sent to</span><span lang="ar" hidden">أدخل الرمز المكون من 6 أرقام المرسل إلى</span>
+                <strong id="verify-email-display"></strong>
+              </div>
+
+              <div class="auth-otp-row" id="otp-row">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" data-idx="0">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="1">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="2">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="3">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="4">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="5">
+              </div>
+              <span class="auth-error" id="verify-err" style="text-align:center;margin-bottom:10px;"></span>
+
+              <button class="auth-btn" id="verify-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Verify</span><span lang="ar" hidden>تأكيد</span></span>
+              </button>
+
+              <div class="auth-resend" id="resend-area">
+                <span id="resend-text"><span lang="en">Didn't receive the code?</span><span lang="ar" hidden>لم يصلك الرمز؟</span></span>
+                <a id="resend-link"><span lang="en">Resend</span><span lang="ar" hidden>إعادة إرسال</span></a>
+                <span class="auth-resend-timer" id="resend-timer"></span>
+              </div>
+
+              <button class="auth-back" id="verify-back"><span lang="en">← Back</span><span lang="ar" hidden">→ رجوع</span></button>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Forgot Password ===== -->
+          <div class="auth-panel" id="panel-forgot">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">Reset Password</span><span lang="ar" hidden>استعادة كلمة المرور</span></div>
+              <div class="auth-card__sub"><span lang="en">Enter your email to receive a reset code</span><span lang="ar" hidden>أدخل بريدك الإلكتروني لاستلام رمز الاستعادة</span></div>
+
+              <div class="auth-field">
+                <label><span lang="en">Email</span><span lang="ar" hidden>البريد الإلكتروني</span></label>
+                <input class="auth-input" id="fg-email" type="email" autocomplete="email" placeholder="email@example.com" dir="ltr">
+                <span class="auth-error" id="fg-email-err"></span>
+              </div>
+
+              <button class="auth-btn" id="fg-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Send Reset Code</span><span lang="ar" hidden>إرسال رمز الاستعادة</span></span>
+              </button>
+
+              <button class="auth-back" id="fg-back"><span lang="en">← Back to Sign In</span><span lang="ar" hidden">→ العودة لتسجيل الدخول</span></button>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Reset OTP (enter reset code) ===== -->
+          <div class="auth-panel" id="panel-reset-otp">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">Enter Reset Code</span><span lang="ar" hidden">أدخل رمز الاستعادة</span></div>
+              <div class="auth-card__sub">
+                <span lang="en">6-digit code sent to</span><span lang="ar" hidden">الرمز المكون من 6 أرقام المرسل إلى</span>
+                <strong id="reset-email-display"></strong>
+              </div>
+
+              <div class="auth-otp-row" id="reset-otp-row">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="0">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="1">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="2">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="3">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="4">
+                <input class="auth-otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" data-idx="5">
+              </div>
+              <span class="auth-error" id="reset-otp-err" style="text-align:center;margin-bottom:10px;"></span>
+
+              <button class="auth-btn" id="reset-otp-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Continue</span><span lang="ar" hidden>متابعة</span></span>
+              </button>
+
+              <button class="auth-back" id="reset-otp-back"><span lang="en">← Back</span><span lang="ar" hidden">→ رجوع</span></button>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: New Password ===== -->
+          <div class="auth-panel" id="panel-newpass">
+            <div class="auth-card">
+              <div class="auth-card__title"><span lang="en">New Password</span><span lang="ar" hidden>كلمة مرور جديدة</span></div>
+              <div class="auth-card__sub"><span lang="en">Choose a strong new password</span><span lang="ar" hidden>اختر كلمة مرور قوية جديدة</span></div>
+
+              <div class="auth-field">
+                <label><span lang="en">New Password</span><span lang="ar" hidden>كلمة المرور الجديدة</span></label>
+                <input class="auth-input" id="np-pass" type="password" autocomplete="new-password" dir="ltr">
+                <span class="auth-error" id="np-pass-err"></span>
+              </div>
+              <div class="auth-field">
+                <label><span lang="en">Confirm Password</span><span lang="ar" hidden>تأكيد كلمة المرور</span></label>
+                <input class="auth-input" id="np-confirm" type="password" autocomplete="new-password" dir="ltr">
+                <span class="auth-error" id="np-confirm-err"></span>
+              </div>
+
+              <button class="auth-btn" id="np-submit">
+                <span class="auth-spinner"></span>
+                <span class="auth-btn-text"><span lang="en">Reset Password</span><span lang="ar" hidden>استعادة كلمة المرور</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Dashboard ===== -->
+          <div class="auth-panel" id="panel-dashboard">
+            <div class="auth-card">
+              <div class="auth-dashboard">
+                <div class="auth-dashboard__avatar" id="dash-avatar">👤</div>
+                <div class="auth-dashboard__name" id="dash-name"></div>
+                <div class="auth-dashboard__email" id="dash-email"></div>
+                <div class="auth-dashboard__badge verified" id="dash-badge"><span lang="en">✓ Verified</span><span lang="ar" hidden>✓ تم التحقق</span></div>
+                <div class="auth-dashboard__actions">
+                  <button class="auth-btn auth-btn--danger" id="dash-signout">
+                    <span lang="en">Sign Out</span><span lang="ar" hidden>تسجيل الخروج</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== PANEL: Success (after verify / reset) ===== -->
+          <div class="auth-panel" id="panel-success">
+            <div class="auth-card">
+              <div class="auth-success">
+                <div class="auth-success__icon">✓</div>
+                <div class="auth-success__title" id="success-title"><span lang="en">Success!</span><span lang="ar" hidden>تم بنجاح!</span></div>
+                <div class="auth-success__sub" id="success-sub"><span lang="en">Your email has been verified</span><span lang="ar" hidden>تم تأكيد بريدك الإلكتروني</span></div>
+                <button class="auth-btn" id="success-cta"><span lang="en">Continue</span><span lang="ar" hidden>متابعة</span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h2 class="project-page__section-title"><span lang="en">About the Project</span><span lang="ar" hidden>نبذة عن المشروع</span></h2>
+    <p lang="en">A complete authentication system powered by InsForge backend. Features email/password registration, 6-digit OTP verification, Google & GitHub OAuth, password reset flow, and session management — all with a bilingual (AR/EN) responsive interface.</p>
+    <p lang="ar" hidden>نظام تحقق كامل يعمل بواسطة InsForge. يشمل التسجيل بالبريد وكلمة المرور، التحقق برمز OTP مكون من 6 أرقام، الدخول الموحد عبر Google و GitHub، استعادة كلمة المرور، وإدارة الجلسات — كل ذلك بواجهة ثنائية اللغة متجاوبة.</p>
+
+    <ul class="feature-list">
+      <li lang="en">Email/password registration with validation</li><li lang="ar" hidden>تسجيل بالبريد وكلمة المرور مع التحقق</li>
+      <li lang="en">6-digit OTP email verification</li><li lang="ar" hidden>التحقق برمز OTP مكون من 6 أرقام</li>
+      <li lang="en">Google & GitHub OAuth integration</li><li lang="ar" hidden>دعم الدخول الموحد Google و GitHub</li>
+      <li lang="en">Password reset flow (email → OTP → new password)</li><li lang="ar" hidden>استعادة كلمة المرور (بريد → رمز → كلمة جديدة)</li>
+      <li lang="en">Password strength indicator</li><li lang="ar" hidden>مؤشر قوة كلمة المرور</li>
+      <li lang="en">Bilingual AR/EN + RTL/LTR</li><li lang="ar" hidden>ثنائي اللغة عربي/إنجليزي + RTL/LTR</li>
+      <li lang="en">Dark/light theme support</li><li lang="ar" hidden>دعم الوضع الليلي/النهاري</li>
+      <li lang="en">Mobile responsive design</li><li lang="ar" hidden>تصميم متجاوب للموبيل</li>
+    </ul>
+
+    <div class="tags">
+      <span>InsForge</span><span>Auth</span><span>OTP</span><span>OAuth</span><span>Vanilla JS</span><span>REST API</span><span>Bilingual</span>
+    </div>
+  </div>
+
+  <div class="auth-toast" id="toast"></div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const INS_BASE = 'https://ih9kxwm2.eu-central.insforge.app';
+      const INS_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OC0xMjM0LTU2NzgtOTBhYi1jZGVmMTIzNDU2NzgiLCJlbWFpbCI6ImFub25AaW5zZm9yZ2UuY29tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNDcxNjd9.MKXdkYOaSmXGechECwLZloVcKqhPRP6KiYdsAbabC-A';
+
+      /* ===== STATE ===== */
+      const state = {
+        lang: localStorage.getItem('portfolio-lang') || 'en',
+        theme: localStorage.getItem('portfolio-theme') || 'light',
+        currentPanel: 'signin',
+        pendingEmail: '',
+        resetToken: '',
+        csrfToken: '',
+      };
+
+      /* ===== I18n ===== */
+      function applyLang() {
+        document.querySelectorAll('[lang]').forEach(el => { el.hidden = el.getAttribute('lang') !== state.lang; });
+        document.querySelectorAll('[data-ar]').forEach(el => { el.hidden = el.getAttribute('data-ar') !== state.lang; });
+        document.querySelectorAll('[data-en]').forEach(el => { el.hidden = el.getAttribute('data-en') !== state.lang; });
+        const titleEl = document.querySelector('title[lang="' + state.lang + '"]');
+        if (titleEl) document.title = titleEl.textContent;
+      }
+
+      function setLang(lang) {
+        state.lang = lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        localStorage.setItem('portfolio-lang', lang);
+        document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
+        applyLang();
+      }
+
+      document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+
+      function setTheme(theme) {
+        state.theme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('portfolio-theme', theme);
+        document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+      }
+
+      document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+      /* ===== Device Switcher ===== */
+      document.querySelectorAll('.device-switcher button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.device-switcher button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const frame = document.querySelector('.device-frame');
+          if (frame) frame.className = 'device-frame ' + btn.dataset.device;
+        });
+      });
+
+      /* ===== Toast ===== */
+      function showToast(msg, type) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'auth-toast ' + type + ' show';
+        clearTimeout(t._hide);
+        t._hide = setTimeout(() => t.classList.remove('show'), 3000);
+      }
+
+      /* ===== Panel Switching ===== */
+      function showPanel(id) {
+        document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+        const panel = document.getElementById('panel-' + id);
+        if (panel) panel.classList.add('active');
+        state.currentPanel = id;
+      }
+
+      /* ===== Loading State ===== */
+      function setLoading(id, loading) {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.classList.toggle('loading', loading);
+        btn.disabled = loading;
+      }
+
+      /* ===== API Helpers ===== */
+      async function apiPost(path, body) {
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + INS_ANON,
+        };
+        if (state.csrfToken) headers['x-csrf-token'] = state.csrfToken;
+        const res = await fetch(INS_BASE + path, { method: 'POST', headers, body: JSON.stringify(body) });
+        const data = await res.json().catch(() => null);
+        return { ok: res.ok, status: res.status, data };
+      }
+
+      async function apiGet(path) {
+        const headers = {
+          'Authorization': 'Bearer ' + INS_ANON,
+        };
+        if (state.csrfToken) headers['x-csrf-token'] = state.csrfToken;
+        const res = await fetch(INS_BASE + path, { method: 'GET', headers });
+        const data = await res.json().catch(() => null);
+        return { ok: res.ok, status: res.status, data };
+      }
+
+      /* ===== Password Validation ===== */
+      function validatePassword(pw) {
+        const rules = {
+          minLen: pw.length >= 6,
+          hasNumber: /[0-9]/.test(pw),
+          hasLower: /[a-z]/.test(pw),
+          hasUpper: /[A-Z]/.test(pw),
+          hasSpecial: /[^a-zA-Z0-9]/.test(pw),
+        };
+        const passed = Object.values(rules).filter(Boolean).length;
+        let strength = 'weak';
+        if (passed >= 5) strength = 'strong';
+        else if (passed >= 3) strength = 'medium';
+        const bars = document.querySelectorAll('.auth-pw-bar');
+        bars.forEach((bar, i) => {
+          bar.className = 'auth-pw-bar' + (i < passed ? ' active ' + strength : '');
+        });
+        document.getElementById('pw-text').textContent = state.lang === 'en'
+          ? (passed >= 5 ? 'Strong password' : passed >= 3 ? 'Medium password' : 'Weak password — ' + Object.entries(rules).filter(([,v]) => !v).map(([k]) => k === 'minLen' ? '6+ chars' : k === 'hasNumber' ? 'number' : k === 'hasLower' ? 'lowercase' : k === 'hasUpper' ? 'uppercase' : 'special char').join(', '))
+          : (passed >= 5 ? 'كلمة مرور قوية' : passed >= 3 ? 'كلمة مرور متوسطة' : 'كلمة ضعيفة — تحتاج ' + Object.entries(rules).filter(([,v]) => !v).map(([k]) => k === 'minLen' ? '6 أحرف' : k === 'hasNumber' ? 'رقم' : k === 'hasLower' ? 'حرف صغير' : k === 'hasUpper' ? 'حرف كبير' : 'رمز خاص').join(', '));
+        return { valid: passed >= 3, rules };
+      }
+
+      // Password strength listener
+      document.getElementById('reg-pass').addEventListener('input', function() {
+        validatePassword(this.value);
+        document.getElementById('reg-pass-err').textContent = '';
+      });
+
+      /* ===== OTP Input Handler ===== */
+      function setupOtp(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const inputs = container.querySelectorAll('.auth-otp-input');
+        inputs.forEach((input, idx) => {
+          input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
+            this.classList.toggle('filled', !!this.value);
+            this.classList.remove('error');
+            if (this.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+          });
+          input.addEventListener('keydown', function(e) {
+            if ((e.key === 'Backspace' || e.key === 'Backward') && !this.value && idx > 0) {
+              inputs[idx - 1].focus();
+              inputs[idx - 1].value = '';
+              inputs[idx - 1].classList.remove('filled');
+            }
+          });
+          input.addEventListener('focus', function() { this.select(); });
+        });
+      }
+
+      function getOtpValue(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return '';
+        return Array.from(container.querySelectorAll('.auth-otp-input')).map(i => i.value).join('');
+      }
+
+      function clearOtp(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.querySelectorAll('.auth-otp-input').forEach(i => { i.value = ''; i.classList.remove('filled', 'error'); });
+      }
+
+      function focusOtp(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const first = container.querySelector('.auth-otp-input');
+        if (first) first.focus();
+      }
+
+      setupOtp('otp-row');
+      setupOtp('reset-otp-row');
+
+      /* ===== RESEND TIMER ===== */
+      let resendTimer = null;
+      function startResendTimer(seconds) {
+        const link = document.getElementById('resend-link');
+        const timer = document.getElementById('resend-timer');
+        link.style.pointerEvents = 'none';
+        link.style.opacity = '0.5';
+        let remaining = seconds;
+        timer.textContent = ' (' + remaining + 's)';
+        clearInterval(resendTimer);
+        resendTimer = setInterval(() => {
+          remaining--;
+          if (remaining <= 0) {
+            clearInterval(resendTimer);
+            link.style.pointerEvents = '';
+            link.style.opacity = '';
+            timer.textContent = '';
+          } else {
+            timer.textContent = ' (' + remaining + 's)';
+          }
+        }, 1000);
+      }
+
+      /* ===== ERROR HELPERS ===== */
+      function getApiErrorMessage(data, fallback) {
+        if (!data) return fallback;
+        if (data.error) {
+          if (typeof data.error === 'string') return data.error;
+          if (data.error.message) return data.error.message;
+        }
+        if (data.message) return data.message;
+        return fallback;
+      }
+
+      /* =================================================================
+       *  AUTH ACTIONS
+       * ================================================================= */
+
+      // ---- Sign Up ----
+      document.getElementById('reg-submit').addEventListener('click', async function() {
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const pass = document.getElementById('reg-pass').value;
+        let valid = true;
+
+        document.getElementById('reg-name-err').textContent = '';
+        document.getElementById('reg-email-err').textContent = '';
+        document.getElementById('reg-pass-err').textContent = '';
+
+        if (!name) { document.getElementById('reg-name-err').textContent = state.lang === 'en' ? 'Name is required' : 'الاسم مطلوب'; valid = false; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('reg-email-err').textContent = state.lang === 'en' ? 'Valid email required' : 'بريد إلكتروني صحيح مطلوب'; valid = false; }
+        const pwCheck = validatePassword(pass);
+        if (!pass || !pwCheck.valid) { document.getElementById('reg-pass-err').textContent = state.lang === 'en' ? 'Password does not meet requirements' : 'كلمة المرور لا تستوفي المتطلبات'; valid = false; }
+        if (!valid) return;
+
+        setLoading('reg-submit', true);
+        try {
+          const { ok, status, data } = await apiPost('/api/auth/users', {
+            email, password: pass, name,
+          });
+          if (ok) {
+            if (data && data.requireEmailVerification) {
+              state.pendingEmail = email;
+              document.getElementById('verify-email-display').textContent = email;
+              clearOtp('otp-row');
+              showPanel('verify');
+              focusOtp('otp-row');
+              startResendTimer(30);
+              showToast(state.lang === 'en' ? 'Verification code sent!' : 'تم إرسال رمز التحقق!', 'success');
+            } else if (data && data.accessToken) {
+              state.csrfToken = data.csrfToken || '';
+              checkSession();
+              showToast(state.lang === 'en' ? 'Account created!' : 'تم إنشاء الحساب!', 'success');
+            }
+          } else if (status === 409) {
+            document.getElementById('reg-email-err').textContent = state.lang === 'en' ? 'Email already registered' : 'البريد مسجل بالفعل';
+          } else {
+            document.getElementById('reg-pass-err').textContent = getApiErrorMessage(data, state.lang === 'en' ? 'Registration failed' : 'فشل التسجيل');
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error. Try again.' : 'خطأ في الشبكة. حاول مرة أخرى.', 'error');
+        }
+        setLoading('reg-submit', false);
+      });
+
+      // ---- OTP Verify ----
+      document.getElementById('verify-submit').addEventListener('click', async function() {
+        const otp = getOtpValue('otp-row');
+        if (otp.length !== 6) { document.getElementById('verify-err').textContent = state.lang === 'en' ? 'Enter all 6 digits' : 'أدخل جميع الأرقام الستة'; return; }
+        document.getElementById('verify-err').textContent = '';
+
+        setLoading('verify-submit', true);
+        try {
+          const { ok, data } = await apiPost('/api/auth/email/verify', {
+            email: state.pendingEmail,
+            otp: otp,
+          });
+          if (ok && data) {
+            state.csrfToken = data.csrfToken || '';
+            clearOtp('otp-row');
+            showDashboard();
+            showToast(state.lang === 'en' ? 'Email verified! Welcome!' : 'تم التحقق! أهلاً بك!', 'success');
+          } else {
+            document.getElementById('verify-err').textContent = getApiErrorMessage(data, state.lang === 'en' ? 'Invalid or expired code' : 'رمز خاطئ أو منتهي الصلاحية');
+            document.querySelectorAll('#otp-row .auth-otp-input').forEach(i => i.classList.add('error'));
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error' : 'خطأ في الشبكة', 'error');
+        }
+        setLoading('verify-submit', false);
+      });
+
+      // ---- Resend ----
+      document.getElementById('resend-link').addEventListener('click', async function() {
+        setLoading('verify-submit', true);
+        try {
+          await apiPost('/api/auth/email/send-verification', {
+            email: state.pendingEmail,
+          });
+          startResendTimer(30);
+          showToast(state.lang === 'en' ? 'Code resent!' : 'تم إعادة الإرسال!', 'success');
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Failed to resend' : 'فشلت إعادة الإرسال', 'error');
+        }
+        setLoading('verify-submit', false);
+      });
+
+      // ---- Sign In ----
+      document.getElementById('si-submit').addEventListener('click', async function() {
+        const email = document.getElementById('si-email').value.trim();
+        const pass = document.getElementById('si-pass').value;
+        document.getElementById('si-email-err').textContent = '';
+        document.getElementById('si-pass-err').textContent = '';
+        if (!email) { document.getElementById('si-email-err').textContent = state.lang === 'en' ? 'Email required' : 'البريد مطلوب'; return; }
+        if (!pass) { document.getElementById('si-pass-err').textContent = state.lang === 'en' ? 'Password required' : 'كلمة المرور مطلوبة'; return; }
+
+        setLoading('si-submit', true);
+        try {
+          const { ok, status, data } = await apiPost('/api/auth/sessions', {
+            email, password: pass,
+          });
+          if (ok && data) {
+            state.csrfToken = data.csrfToken || '';
+            showDashboard();
+            showToast(state.lang === 'en' ? 'Welcome back!' : 'مرحباً بعودتك!', 'success');
+          } else if (status === 403) {
+            state.pendingEmail = email;
+            document.getElementById('verify-email-display').textContent = email;
+            clearOtp('otp-row');
+            showPanel('verify');
+            focusOtp('otp-row');
+            startResendTimer(30);
+            showToast(state.lang === 'en' ? 'Please verify your email first' : 'يرجى تأكيد بريدك أولاً', 'error');
+          } else {
+            document.getElementById('si-pass-err').textContent = getApiErrorMessage(data, state.lang === 'en' ? 'Invalid email or password' : 'بريد أو كلمة مرور خاطئة');
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error' : 'خطأ في الشبكة', 'error');
+        }
+        setLoading('si-submit', false);
+      });
+
+      // ---- Forgot Password: Send Code ----
+      document.getElementById('fg-submit').addEventListener('click', async function() {
+        const email = document.getElementById('fg-email').value.trim();
+        document.getElementById('fg-email-err').textContent = '';
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('fg-email-err').textContent = state.lang === 'en' ? 'Valid email required' : 'بريد صحيح مطلوب'; return; }
+
+        setLoading('fg-submit', true);
+        try {
+          const { ok } =           await apiPost('/api/auth/email/send-reset-password', {
+            email,
+          });
+          if (ok) {
+            state.pendingEmail = email;
+            document.getElementById('reset-email-display').textContent = email;
+            clearOtp('reset-otp-row');
+            showPanel('reset-otp');
+            focusOtp('reset-otp-row');
+            showToast(state.lang === 'en' ? 'Reset code sent!' : 'تم إرسال رمز الاستعادة!', 'success');
+          } else {
+            document.getElementById('fg-email-err').textContent = state.lang === 'en' ? 'Email not found' : 'البريد غير موجود';
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error' : 'خطأ في الشبكة', 'error');
+        }
+        setLoading('fg-submit', false);
+      });
+
+      // ---- Reset Password: Exchange OTP ----
+      document.getElementById('reset-otp-submit').addEventListener('click', async function() {
+        const otp = getOtpValue('reset-otp-row');
+        if (otp.length !== 6) { document.getElementById('reset-otp-err').textContent = state.lang === 'en' ? 'Enter all 6 digits' : 'أدخل جميع الأرقام الستة'; return; }
+        document.getElementById('reset-otp-err').textContent = '';
+
+        setLoading('reset-otp-submit', true);
+        try {
+          const { ok, data } = await apiPost('/api/auth/email/exchange-reset-password-token', {
+            email: state.pendingEmail,
+            code: otp,
+          });
+          if (ok && data) {
+            state.resetToken = data.token;
+            clearOtp('reset-otp-row');
+            showPanel('newpass');
+          } else {
+            document.getElementById('reset-otp-err').textContent = getApiErrorMessage(data, state.lang === 'en' ? 'Invalid or expired code' : 'رمز خاطئ أو منتهي');
+            document.querySelectorAll('#reset-otp-row .auth-otp-input').forEach(i => i.classList.add('error'));
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error' : 'خطأ في الشبكة', 'error');
+        }
+        setLoading('reset-otp-submit', false);
+      });
+
+      // ---- Reset Password: New Password ----
+      document.getElementById('np-submit').addEventListener('click', async function() {
+        const pass = document.getElementById('np-pass').value;
+        const confirm = document.getElementById('np-confirm').value;
+        document.getElementById('np-pass-err').textContent = '';
+        document.getElementById('np-confirm-err').textContent = '';
+        if (!pass || pass.length < 6) { document.getElementById('np-pass-err').textContent = state.lang === 'en' ? 'Min 6 characters' : '6 أحرف على الأقل'; return; }
+        if (pass !== confirm) { document.getElementById('np-confirm-err').textContent = state.lang === 'en' ? 'Passwords do not match' : 'كلمة المرور غير متطابقة'; return; }
+
+        setLoading('np-submit', true);
+        try {
+          const { ok, data } = await apiPost('/api/auth/email/reset-password', {
+            newPassword: pass,
+            otp: state.resetToken,
+          });
+          if (ok) {
+            document.getElementById('success-title').innerHTML = state.lang === 'en' ? 'Password Reset!' : 'تم استعادة كلمة المرور!';
+            document.getElementById('success-sub').innerHTML = state.lang === 'en' ? 'You can now sign in with your new password' : 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة';
+            document.getElementById('success-cta').onclick = () => showPanel('signin');
+            showPanel('success');
+            showToast(state.lang === 'en' ? 'Password reset successful!' : 'تم استعادة كلمة المرور بنجاح!', 'success');
+          } else {
+            document.getElementById('np-pass-err').textContent = getApiErrorMessage(data, state.lang === 'en' ? 'Reset failed. Try again.' : 'فشلت الاستعادة. حاول مرة أخرى.');
+          }
+        } catch (e) {
+          showToast(state.lang === 'en' ? 'Network error' : 'خطأ في الشبكة', 'error');
+        }
+        setLoading('np-submit', false);
+      });
+
+      // ---- OAuth (PKCE) ----
+      function base64url(buf) {
+        return btoa(String.fromCharCode(...new Uint8Array(buf)))
+          .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      }
+
+      document.querySelectorAll('[data-oauth]').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          const provider = this.dataset.oauth;
+          const redirectUri = window.location.href.split('?')[0].split('#')[0];
+
+          const codeVerifierArr = new Uint8Array(32);
+          crypto.getRandomValues(codeVerifierArr);
+          const codeVerifier = base64url(codeVerifierArr);
+
+          const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
+          const codeChallenge = base64url(hash);
+
+          sessionStorage.setItem('oa_code_verifier', codeVerifier);
+          const url = INS_BASE + '/api/auth/oauth/' + provider
+            + '?redirect_uri=' + encodeURIComponent(redirectUri)
+            + '&code_challenge=' + encodeURIComponent(codeChallenge);
+          window.location.href = url;
+        });
+      });
+
+      // ---- Sign Out ----
+      document.getElementById('dash-signout').addEventListener('click', async function() {
+        try {
+          await apiPost('/api/auth/logout', {});
+        } catch (_) {}
+        state.csrfToken = '';
+        state.pendingEmail = '';
+        state.resetToken = '';
+        showPanel('signin');
+        document.getElementById('si-email').value = '';
+        document.getElementById('si-pass').value = '';
+        showToast(state.lang === 'en' ? 'Signed out' : 'تم تسجيل الخروج', 'success');
+      });
+
+      /* =================================================================
+       *  DASHBOARD
+       * ================================================================= */
+      async function showDashboard() {
+        try {
+          const { ok, data } = await apiGet('/api/auth/sessions/current');
+          if (ok && data && data.user) {
+            const user = data.user;
+            document.getElementById('dash-name').textContent = user.profile?.name || user.email;
+            document.getElementById('dash-email').textContent = user.email;
+            const avatar = document.getElementById('dash-avatar');
+            avatar.textContent = (user.profile?.name || user.email)[0].toUpperCase();
+            const badge = document.getElementById('dash-badge');
+            if (user.emailVerified) {
+              badge.className = 'auth-dashboard__badge verified';
+              badge.innerHTML = state.lang === 'en' ? '✓ Verified' : '✓ تم التحقق';
+            } else {
+              badge.className = 'auth-dashboard__badge unverified';
+              badge.innerHTML = state.lang === 'en' ? '✗ Not Verified' : '✗ لم يتم التحقق';
+            }
+            showPanel('dashboard');
+          } else {
+            showPanel('signin');
+          }
+        } catch (_) {
+          showPanel('signin');
+        }
+      }
+
+      /* =================================================================
+       *  NAVIGATION LINKS
+       * ================================================================= */
+      document.getElementById('si-to-reg').addEventListener('click', () => { showPanel('register'); document.getElementById('reg-name').focus(); });
+      document.getElementById('reg-to-si').addEventListener('click', () => showPanel('signin'));
+      document.getElementById('si-to-forgot').addEventListener('click', () => { showPanel('forgot'); document.getElementById('fg-email').focus(); });
+      document.getElementById('fg-back').addEventListener('click', () => showPanel('signin'));
+      document.getElementById('verify-back').addEventListener('click', () => { state.pendingEmail = ''; clearOtp('otp-row'); showPanel('register'); });
+      document.getElementById('reset-otp-back').addEventListener('click', () => { state.pendingEmail = ''; clearOtp('reset-otp-row'); showPanel('forgot'); });
+
+      /* =================================================================
+       *  ENTER KEY SUPPORT
+       * ================================================================= */
+      function enterHandler(inputId, btnId) {
+        document.getElementById(inputId).addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') document.getElementById(btnId).click();
+        });
+      }
+      enterHandler('si-pass', 'si-submit');
+      enterHandler('reg-pass', 'reg-submit');
+      enterHandler('fg-email', 'fg-submit');
+      enterHandler('np-confirm', 'np-submit');
+
+      /* =================================================================
+       *  CHECK EXISTING SESSION ON LOAD + OAuth callback
+       * ================================================================= */
+      async function checkSession() {
+        try {
+          const { ok, data } = await apiGet('/api/auth/sessions/current');
+          if (ok && data && data.user) {
+            showDashboard();
+            return true;
+          }
+        } catch (_) {}
+        return false;
+      }
+
+      async function init() {
+        setLang(state.lang);
+        setTheme(state.theme);
+
+        // Check for OAuth callback code in URL
+        const params = new URLSearchParams(window.location.search);
+        const oauthCode = params.get('insforge_code');
+        if (oauthCode) {
+          const codeVerifier = sessionStorage.getItem('oa_code_verifier');
+          if (codeVerifier) {
+            try {
+              const { ok, data } = await apiPost('/api/auth/oauth/exchange', {
+                code: oauthCode,
+                code_verifier: codeVerifier,
+              });
+              if (ok && data) {
+                state.csrfToken = data.csrfToken || '';
+                sessionStorage.removeItem('oa_code_verifier');
+                window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+                showDashboard();
+                return;
+              }
+            } catch (_) {}
+          }
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+        }
+
+        const hasSession = await checkSession();
+        if (!hasSession) {
+          showPanel('signin');
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

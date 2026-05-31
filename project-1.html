@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title lang="ar">لاندينج بيج فائقة السرعة | علاء محمد</title>
+  <title lang="en" hidden>Speed Landing Page | Alaa Mohamed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .project-page {
+      max-width: 900px; margin: 0 auto; padding: 24px 20px;
+    }
+    .project-page__back {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 24px; font-size: 0.9rem; color: var(--primary);
+      text-decoration: none; font-weight: 600;
+    }
+    .project-page__title {
+      font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;
+    }
+    .project-page__sub {
+      color: var(--text-muted); margin-bottom: 24px;
+    }
+    .project-page__section-title {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; margin-top: 32px;
+    }
+    .feature-list {
+      list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .feature-list li {
+      padding: 10px 14px; background: var(--bg-alt); border-radius: 8px;
+      font-size: 0.9rem; border: 1px solid var(--card-border);
+    }
+    .feature-list li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+
+    .speed-compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;
+    }
+    .speed-compare__card {
+      border-radius: 12px; padding: 24px; text-align: center;
+      border: 2px solid var(--card-border);
+    }
+    .speed-compare__card--before { border-color: #ef4444; background: rgba(239,68,68,0.05); }
+    .speed-compare__card--after { border-color: #22c55e; background: rgba(34,197,94,0.05); }
+    .speed-compare__label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+    .speed-compare__score { font-size: 3rem; font-weight: 800; margin: 8px 0; }
+    .speed-compare__score--before { color: #ef4444; }
+    .speed-compare__score--after { color: #22c55e; }
+    .speed-compare__time { font-size: 1rem; color: var(--text-muted); }
+    .speed-bar {
+      height: 10px; border-radius: 5px; margin-top: 12px; overflow: hidden;
+      background: var(--bg-alt);
+    }
+    .speed-bar__fill {
+      height: 100%; border-radius: 5px; transition: width 2s ease;
+    }
+    .speed-bar__fill--before { width: 34%; background: #ef4444; }
+    .speed-bar__fill--after { width: 100%; background: #22c55e; }
+    .speed-bar__fill--animate { animation: fillBar 2s ease forwards; }
+    @keyframes fillBar { from { width: 0; } }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tags span {
+      padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;
+      background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-muted);
+    }
+
+    [data-theme="dark"] .device-frame { border-color: #333; }
+    [data-theme="dark"] .speed-compare__card--before { background: rgba(239,68,68,0.1); }
+    [data-theme="dark"] .speed-compare__card--after { background: rgba(34,197,94,0.1); }
+
+    .device-frame.mobile .speed-compare { grid-template-columns: 1fr; }
+    .device-frame.mobile .feature-list { grid-template-columns: 1fr; }
+    .device-frame.mobile .project-page__title { font-size: 1.2rem; }
+    .device-frame.mobile .project-page__sub { font-size: 0.8rem; }
+    .device-frame.mobile .speed-compare__card { padding: 16px; }
+    .device-frame.mobile .speed-compare__score { font-size: 2rem; }
+    .device-frame.mobile { font-size: 0.85rem; }
+
+    @media (max-width: 600px) {
+      .speed-compare { grid-template-columns: 1fr; }
+      .feature-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="project-page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <a href="index.html" class="project-page__back">← <span lang="ar">العودة إلى المعرض</span><span lang="en" hidden>Back to Portfolio</span></a>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-icon" id="langToggle" aria-label="English">EN</button>
+        <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+      </div>
+    </div>
+
+    <h1 class="project-page__title" lang="ar">لاندينج بيج فائقة السرعة</h1>
+    <h1 class="project-page__title" lang="en" hidden>Ultra-Fast Landing Page</h1>
+    <p class="project-page__sub" lang="ar">رفع الأداء من 34 إلى 100 في PageSpeed، وتقليل زمن التحميل من 4.2 ثانية إلى 0.4 ثانية</p>
+    <p class="project-page__sub" lang="en" hidden>Boosted PageSpeed from 34 to 100, reduced load time from 4.2s to 0.4s</p>
+
+    <div class="device-switcher">
+      <button class="active" data-device="desktop"><span lang="ar">حاسوب</span><span lang="en" hidden>Desktop</span></button>
+      <button data-device="tablet"><span lang="ar">جهاز لوحي</span><span lang="en" hidden>Tablet</span></button>
+      <button data-device="mobile"><span lang="ar">جوال</span><span lang="en" hidden>Mobile</span></button>
+    </div>
+
+    <div class="device-frame desktop">
+      <div class="device-frame__bar">
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span class="device-frame__dot"></span>
+        <span style="flex:1;text-align:center;font-size:0.75rem;color:var(--text-muted)">mypage.com</span>
+      </div>
+      <div class="device-frame__body">
+        <div class="speed-compare">
+          <div class="speed-compare__card speed-compare__card--before">
+            <div class="speed-compare__label"><span lang="ar">قبل التحسين</span><span lang="en" hidden>Before</span></div>
+            <div class="speed-compare__score speed-compare__score--before">34</div>
+            <div class="speed-compare__time">4.2s</div>
+            <div class="speed-bar"><div class="speed-bar__fill speed-bar__fill--before speed-bar__fill--animate" style="animation-delay:0.5s"></div></div>
+          </div>
+          <div class="speed-compare__card speed-compare__card--after">
+            <div class="speed-compare__label"><span lang="ar">بعد التحسين</span><span lang="en" hidden>After</span></div>
+            <div class="speed-compare__score speed-compare__score--after">100</div>
+            <div class="speed-compare__time">0.4s</div>
+            <div class="speed-bar"><div class="speed-bar__fill speed-bar__fill--after speed-bar__fill--animate" style="animation-delay:1s"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="project-page__section-title"><span lang="ar">نبذة عن المشروع</span><span lang="en" hidden>About the Project</span></h2>
+    <p lang="ar">موقع شركة كان يحمل ببطء 4.2 ثانية على الموبيل، 45% من الزوار كانوا يغادرون قبل تحميل الصفحة بالكامل. قمت بإعادة بناء الموقع بالكامل:</p>
+    <p lang="en" hidden>A company site was loading at 4.2s on mobile with 45% bounce rate. I rebuilt it entirely:</p>
+
+    <ul class="feature-list">
+      <li lang="ar">صفر مكتبات - HTML5 + CSS3 + JS خفيف</li>
+      <li lang="en" hidden>Zero libraries - HTML5 + CSS3 + Lightweight JS</li>
+      <li lang="ar">صور WebP مع تحميل كسول</li>
+      <li lang="en" hidden>WebP images with lazy loading</li>
+      <li lang="ar">تقليل CSS غير المستخدم</li>
+      <li lang="en" hidden>Removed unused CSS</li>
+      <li lang="ar">تحسين خطوط (display swap + preconnect)</li>
+      <li lang="en" hidden>Font optimization (display swap + preconnect)</li>
+      <li lang="ar">تأجيل JavaScript غير الضروري</li>
+      <li lang="en" hidden>Deferred non-critical JavaScript</li>
+      <li lang="ar">تحسين التحميل النقدي (Critical CSS)</li>
+      <li lang="en" hidden>Critical CSS inlining</li>
+    </ul>
+
+    <div class="tags">
+      <span>HTML5</span><span>CSS3</span><span>Vanilla JS</span><span>WebP</span><span>Lazy Load</span><span>Performance</span>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      lang: localStorage.getItem('portfolio-lang') || 'en',
+      theme: localStorage.getItem('portfolio-theme') || 'light',
+    };
+    const html = document.documentElement;
+
+    function setLang(lang) {
+      state.lang = lang;
+      html.lang = lang;
+      html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('portfolio-lang', lang);
+      document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'العربية';
+      document.querySelectorAll('[lang]').forEach(el => { el.hidden = el.getAttribute('lang') !== lang; });
+      const titleEl = document.querySelector('title[lang="' + lang + '"]');
+      if (titleEl) document.title = titleEl.textContent;
+      document.querySelectorAll('.speed-bar__fill--animate').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      });
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+    document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+    document.querySelectorAll('.device-switcher button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.device-switcher button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const frame = document.querySelector('.device-frame');
+        if (frame) frame.className = 'device-frame ' + btn.dataset.device;
+      });
+    });
+
+    setLang(state.lang);
+    setTheme(state.theme);
+  </script>
+</body>
+</html>
