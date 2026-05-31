@@ -142,6 +142,16 @@ portfolio/
 - All passwords validated client-side + server-side
 - OAuth uses PKCE flow
 
+## Blog
+
+4 bilingual articles on `blog.html`:
+| # | Arabic Title | English Title |
+|---|-------------|--------------|
+| 1 | #الهوية_الرقمية او الإلكترونية او #العلامة_التجارية اون لاين او #براند / #براندينج ؟؟؟ | Digital Identity vs. Branding: What's the Difference? |
+| 2 | الدليل الكامل لتحويل المحتوى إلى ماكينة مبيعات: تصميم موقع احترافي وإدارة سوشيال ميديا بذكاء | The Complete Guide to Turning Content into a Sales Machine |
+| 3 | كيف تجلب المزيد من العملاء المحتملين عبر المحتوى الاحترافي وتصميم المواقع وإدارة السوشيال ميديا في 2026 | How to Generate More Qualified Leads Through Content, Design & Social Media in 2026 |
+| 4 | نظام التوثيق الآمن: بناء مدخل آمن لموقعك باستخدام InsForge | Secure Authentication System: Build a Safe Entry Point for Your Website with InsForge |
+
 ## Implementation Checklist
 
 - [x] Sign Up form with name, email, password
