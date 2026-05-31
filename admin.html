@@ -349,8 +349,8 @@ function setTheme(theme) {
 
 document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
 
-async function apiCall(action, extra = {}) {
-  const password = sessionStorage.getItem('adminToken') || '';
+async function apiCall(action, extra = {}, pw) {
+  const password = pw || sessionStorage.getItem('adminToken') || '';
   const res = await fetch(FUNCTIONS_BASE + '/get-contacts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -495,7 +495,7 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
   document.getElementById('loginBtn').disabled = true;
 
   try {
-    const result = await apiCall('list', {});
+    const result = await apiCall('list', {}, password);
     if (result.data) {
       sessionStorage.setItem('adminToken', password);
       state.authenticated = true;
