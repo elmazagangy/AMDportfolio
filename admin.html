@@ -236,6 +236,7 @@ input { font-family: inherit; font-size: inherit; }
   <div class="nav__inner">
     <a href="index.html" class="nav__logo"><span lang="en">AM Admin</span><span lang="ar" hidden">علاء محمد</span></a>
     <div class="nav__actions">
+      <button class="btn-icon" id="notifToggle" aria-label="Notifications" style="display:none">🔔</button>
       <button class="btn-icon" id="langToggle" aria-label="Language">AR</button>
       <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
     </div>
@@ -346,8 +347,6 @@ function setTheme(theme) {
   localStorage.setItem('portfolio-theme', theme);
   document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
 }
-
-document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
 
 async function apiCall(action, extra = {}, pw) {
   const password = pw || sessionStorage.getItem('adminToken') || '';
@@ -543,11 +542,68 @@ if (savedPass) {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').classList.add('active');
       filterMessages();
+      startNotificationPolling();
     } else {
       sessionStorage.removeItem('adminToken');
     }
   })();
 }
+
+let pollTimer = null;
+let lastCount = 0;
+let notifEnabled = false;
+
+function startNotificationPolling() {
+  lastCount = state.messages.length;
+  if ('Notification' in window) {
+    if (Notification.permission === 'granted') notifEnabled = true;
+    document.getElementById('notifToggle').style.display = 'inline-flex';
+  }
+  pollTimer = setInterval(async () => {
+    if (!state.authenticated) return;
+    try {
+      const result = await apiCall('list', {});
+      if (result.data && result.data.length > lastCount) {
+        const newMsgs = result.data.length - lastCount;
+        state.messages = result.data;
+        filterMessages();
+        if (notifEnabled && Notification.permission === 'granted') {
+          new Notification('Alaa Portfolio', {
+            body: (state.lang === 'ar' ? 'رسالة جديدة' : 'New message') + (newMsgs > 1 ? ' (' + newMsgs + ')' : ''),
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📬</text></svg>',
+          });
+        }
+        lastCount = result.data.length;
+      } else if (result.data) {
+        lastCount = result.data.length;
+      }
+    } catch (_) {}
+  }, 60000);
+}
+
+document.getElementById('notifToggle')?.addEventListener('click', async () => {
+  if (notifEnabled) {
+    notifEnabled = false;
+    document.getElementById('notifToggle').textContent = state.lang === 'ar' ? '🔔' : '🔔';
+    document.getElementById('notifToggle').style.opacity = '0.4';
+  } else {
+    if (Notification.permission === 'granted') {
+      notifEnabled = true;
+      document.getElementById('notifToggle').textContent = '🔔';
+      document.getElementById('notifToggle').style.opacity = '1';
+    } else {
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        notifEnabled = true;
+        document.getElementById('notifToggle').textContent = '🔔';
+        document.getElementById('notifToggle').style.opacity = '1';
+      }
+    }
+  }
+});
+
+// Toggle dark/light
+document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
 
 setTheme(state.theme);
 setLang(state.lang);

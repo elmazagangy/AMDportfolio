@@ -140,18 +140,8 @@ contactForm.addEventListener('submit', async (e) => {
       throw new Error(`HTTP ${res.status}: ${errBody}`);
     }
 
-    // EmailJS notification (free, no paid plan required)
-    if (EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId) {
-      try {
-        await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
-          to_email: EMAILJS_CONFIG.notifyEmail,
-          from_name: data.name,
-          from_email: data.email,
-          subject: data.subject || (state.lang === 'ar' ? 'رسالة جديدة' : 'New message'),
-          message: data.message,
-        });
-      } catch (_) { /* email notification is optional */ }
-    }
+    // Notification: check the admin panel at /admin.html for new messages.
+    // EmailJS is disabled because Yahoo blocks its emails.
 
     formStatus.className = 'form-status success';
     formStatus.textContent = state.lang === 'ar' ? 'تم إرسال رسالتك بنجاح! سأتواصل معك قريباً.' : 'Message sent successfully! I will get back to you soon.';
@@ -290,16 +280,11 @@ if (sheetsSearchInput) {
 // Init sheets
 renderSheets();
 
-/* ===== EMAIL NOTIFICATION VIA EMAILJS (FREE) ===== */
-/* EmailJS is a free service (200 emails/month) that sends emails from browsers.
-   To enable email notifications + auto-reply:
-   1. Go to https://www.emailjs.com/ and sign up (free, 2 min)
-   2. Create an Email Service (connect your Gmail, Yahoo, or Outlook)
-   3. Go to Email Templates → Create New Template
-      - Set Subject: "New message from {{name}}"
-      - Set Content (HTML): use {{name}}, {{email}}, {{subject}}, {{message}}
-   4. Go to Account → API Keys, copy your Public Key
-   5. Replace the placeholder values below with your keys
+/* ===== EMAIL NOTIFICATION (OPTIONAL) ===== */
+/* EmailJS is commented out because Yahoo blocks its emails.
+   Instead of email notifications, just check the admin panel
+   at /admin.html (password: admindeveloper2026) for new messages.
+   The panel also shows Smart Gate leads and contact form submissions.
 */
 const EMAILJS_CONFIG = {
   publicKey: 'zFuvj8vULtX86m4AF',
@@ -307,8 +292,9 @@ const EMAILJS_CONFIG = {
   templateId: 'template_5q0x6qd',
   notifyEmail: 'alaa.elattar@yahoo.com',
 };
-
-if (EMAILJS_CONFIG.publicKey) emailjs.init(EMAILJS_CONFIG.publicKey);
+// EmailJS won't be initialized - Yahoo blocks the emails.
+// If you switch to Gmail/Outlook, uncomment the line below:
+// if (EMAILJS_CONFIG.publicKey) emailjs.init(EMAILJS_CONFIG.publicKey);
 
 function authGenerateCode() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
@@ -455,6 +441,79 @@ function initDeviceSwitchers() {
   });
 }
 initDeviceSwitchers();
+
+/* ===== SMART EMAIL GATE ===== */
+const smartGate = document.getElementById('smartGate');
+const smartGateEmail = document.getElementById('smartGateEmail');
+const smartGateBtn = document.getElementById('smartGateBtn');
+const smartGateClose = document.getElementById('smartGateClose');
+const smartGateHint = document.getElementById('smartGateHint');
+const smartGateSuccess = document.getElementById('smartGateSuccess');
+
+let gateInteractions = parseInt(sessionStorage.getItem('gateCount') || '0');
+
+// Track clicks on project and service cards
+document.querySelectorAll('.project-card, .service-card, .project__link, [href="#projects"], [href="#services"]').forEach(el => {
+  el.addEventListener('click', () => {
+    gateInteractions++;
+    sessionStorage.setItem('gateCount', gateInteractions);
+    if (gateInteractions >= 3) showSmartGate();
+  });
+});
+
+function showSmartGate() {
+  if (sessionStorage.getItem('gateDone')) return;
+  setTimeout(() => {
+    smartGate.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }, 600);
+}
+
+function hideSmartGate() {
+  smartGate.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+smartGateClose.addEventListener('click', hideSmartGate);
+smartGate.querySelector('.smart-gate__overlay').addEventListener('click', hideSmartGate);
+
+smartGateBtn.addEventListener('click', async () => {
+  const email = smartGateEmail.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    smartGateHint.textContent = state.lang === 'ar' ? 'أدخل بريداً صحيحاً' : 'Enter a valid email';
+    return;
+  }
+  smartGateHint.textContent = '';
+  smartGateBtn.disabled = true;
+  smartGateBtn.textContent = '...';
+
+  try {
+    await fetch(`${INS_BASE}/api/database/records/contacts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${INS_ANON}` },
+      body: JSON.stringify({
+        name: state.lang === 'ar' ? 'زائر مهتم' : 'Interested Visitor',
+        email,
+        subject: state.lang === 'ar' ? 'اشتراك من البوابة الذكية' : 'Smart Gate Lead',
+        message: state.lang === 'ar' ? 'تم التسجيل بعد 3 نقرات على المشاريع' : 'Signed up after 3 project clicks',
+      }),
+    });
+
+    smartGateSuccess.classList.add('active');
+    smartGateEmail.style.display = 'none';
+    smartGateBtn.style.display = 'none';
+    sessionStorage.setItem('gateDone', '1');
+    setTimeout(() => { hideSmartGate(); window.location.hash = '#projects'; }, 1500);
+  } catch {
+    smartGateHint.textContent = state.lang === 'ar' ? 'حدث خطأ، حاول مرة أخرى' : 'Error, try again';
+    smartGateBtn.disabled = false;
+    smartGateBtn.textContent = state.lang === 'ar' ? 'عرض المشاريع' : 'Show Projects';
+  }
+});
+
+smartGateEmail.addEventListener('keydown', e => {
+  if (e.key === 'Enter') smartGateBtn.click();
+});
 
 /* ===== INIT ===== */
 setLang(state.lang);
