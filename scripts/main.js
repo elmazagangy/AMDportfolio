@@ -140,26 +140,17 @@ contactForm.addEventListener('submit', async (e) => {
       throw new Error(`HTTP ${res.status}: ${errBody}`);
     }
 
-    // Send email notification if configured
-    if (NOTIFY_EMAIL) {
-      const html = `<h2>${state.lang === 'ar' ? 'رسالة جديدة من' : 'New message from'} ${data.name}</h2>
-<p><strong>${state.lang === 'ar' ? 'البريد' : 'Email'}:</strong> ${data.email}</p>
-${data.subject ? `<p><strong>${state.lang === 'ar' ? 'الموضوع' : 'Subject'}:</strong> ${data.subject}</p>` : ''}
-<p><strong>${state.lang === 'ar' ? 'الرسالة' : 'Message'}:</strong></p>
-<p>${data.message.replace(/\n/g, '<br>')}</p>`;
-      fetch(`${INS_BASE}/api/email/send-raw`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${INS_ANON}`,
-        },
-        body: JSON.stringify({
-          to: NOTIFY_EMAIL,
-          subject: state.lang === 'ar' ? `رسالة جديدة من ${data.name}` : `New message from ${data.name}`,
-          html,
-          replyTo: data.email,
-        }),
-      }).catch(() => {});
+    // EmailJS notification (free, no paid plan required)
+    if (EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId) {
+      try {
+        await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+          to_email: EMAILJS_CONFIG.notifyEmail,
+          from_name: data.name,
+          from_email: data.email,
+          subject: data.subject || (state.lang === 'ar' ? 'رسالة جديدة' : 'New message'),
+          message: data.message,
+        });
+      } catch (_) { /* email notification is optional */ }
     }
 
     formStatus.className = 'form-status success';
@@ -299,27 +290,49 @@ if (sheetsSearchInput) {
 // Init sheets
 renderSheets();
 
-/* ===== EMAIL NOTIFICATION CONFIG ===== */
-const NOTIFY_EMAIL = ''; // Set to your email to receive contact form notifications
+/* ===== EMAIL NOTIFICATION VIA EMAILJS (FREE) ===== */
+/* EmailJS is a free service (200 emails/month) that sends emails from browsers.
+   To enable email notifications + auto-reply:
+   1. Go to https://www.emailjs.com/ and sign up (free, 2 min)
+   2. Create an Email Service (connect your Gmail, Yahoo, or Outlook)
+   3. Go to Email Templates → Create New Template
+      - Set Subject: "New message from {{name}}"
+      - Set Content (HTML): use {{name}}, {{email}}, {{subject}}, {{message}}
+   4. Go to Account → API Keys, copy your Public Key
+   5. Replace the placeholder values below with your keys
+*/
+const EMAILJS_CONFIG = {
+  publicKey: 'zFuvj8vULtX86m4AF',
+  serviceId: 'service_fthqr9i',
+  templateId: 'template_5q0x6qd',
+  notifyEmail: 'alaa.elattar@yahoo.com',
+};
+
+if (EMAILJS_CONFIG.publicKey) emailjs.init(EMAILJS_CONFIG.publicKey);
 
 function authGenerateCode() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
-function authSendOtp(email, code, lang) {
-  return new Promise((resolve) => {
-    fetch(`${INS_BASE}/api/email/send-raw`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${INS_ANON}`,
-      },
-      body: JSON.stringify({
-        to: email,
+async function authSendOtp(email, code, lang) {
+  if (EMAILJS_CONFIG.publicKey) {
+    try {
+      await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+        to_email: email,
+        from_name: 'Alaa Portfolio',
+        from_email: EMAILJS_CONFIG.notifyEmail,
         subject: lang === 'ar' ? 'رمز التحقق الخاص بك' : 'Your Verification Code',
-        html: `<h2>${lang === 'ar' ? 'رمز التحقق' : 'Verification Code'}</h2><p>${lang === 'ar' ? 'رمز التحقق الخاص بك هو:' : 'Your verification code is:'} <strong>${code}</strong></p>`,
-        replyTo: '',
-      }),
-    }).then(r => resolve(r.ok)).catch(() => resolve(false));
-  });
+        message: lang === 'ar' ? `رمز التحقق الخاص بك هو: ${code}` : `Your verification code is: ${code}`,
+      });
+      return true;
+    } catch (_) { /* EmailJS failed, try fallback */ }
+  }
+  try {
+    const r = await fetch(`${INS_BASE}/api/email/send-raw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${INS_ANON}` },
+      body: JSON.stringify({ to: email, subject: lang === 'ar' ? 'رمز التحقق الخاص بك' : 'Your Verification Code', html: `<h2>${lang === 'ar' ? 'رمز التحقق' : 'Verification Code'}</h2><p>${lang === 'ar' ? 'رمز التحقق الخاص بك هو:' : 'Your verification code is:'} <strong>${code}</strong></p>`, replyTo: '' }),
+    });
+    return r.ok;
+  } catch { return false; }
 }
 
 /* ===== AUTH VERIFICATION DEMO (Project 6) ===== */

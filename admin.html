@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title lang="en">Admin Dashboard — Alaa Mohamed</title>
+<title lang="ar" hidden>لوحة التحكم — علاء محمد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-ar: 'Cairo', sans-serif;
+  --font-en: 'Inter', sans-serif;
+  --transition: 0.3s ease;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --max-width: 1100px;
+}
+[data-theme="light"] {
+  --bg: #f8f9fc; --bg-alt: #ffffff; --bg-card: #ffffff;
+  --text: #1e293b; --text-muted: #64748b; --text-inverse: #f1f5f9;
+  --primary: #6C63FF; --primary-hover: #5a52e0; --primary-glow: rgba(108,99,255,0.15);
+  --border: #e2e8f0; --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --nav-bg: rgba(255,255,255,0.85); --card-border: #e2e8f0;
+  --input-bg: #f1f5f9; --input-border: #cbd5e1;
+  --danger: #ef4444; --danger-glow: rgba(239,68,68,0.1);
+  --success: #22c55e; --success-glow: rgba(34,197,94,0.1);
+}
+[data-theme="dark"] {
+  --bg: #0b1121; --bg-alt: #131c31; --bg-card: #1a2540;
+  --text: #e2e8f0; --text-muted: #94a3b8; --text-inverse: #0f172a;
+  --primary: #818cf8; --primary-hover: #6c75f0; --primary-glow: rgba(129,140,248,0.15);
+  --border: #1e293b; --shadow: 0 4px 24px rgba(0,0,0,0.2);
+  --nav-bg: rgba(11,17,33,0.9); --card-border: #1e293b;
+  --input-bg: #131c31; --input-border: #1e293b;
+  --danger: #ef4444; --danger-glow: rgba(239,68,68,0.15);
+  --success: #22c55e; --success-glow: rgba(34,197,94,0.15);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ar);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  transition: background var(--transition), color var(--transition);
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+input { font-family: inherit; font-size: inherit; }
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+
+/* Nav */
+.nav {
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; max-width: var(--max-width); margin: 0 auto; padding: 0 20px;
+}
+.nav__logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+.nav__actions { display: flex; gap: 8px; align-items: center; }
+.btn-icon {
+  padding: 8px 12px; border-radius: var(--radius-sm); font-weight: 600;
+  font-size: 0.85rem; transition: all var(--transition); border: 1px solid var(--border);
+}
+.btn-icon:hover { background: var(--primary-glow); }
+
+/* Login screen */
+.login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 64px); padding: 40px 20px;
+}
+.login-card {
+  background: var(--bg-card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 40px 32px; max-width: 400px;
+  width: 100%; box-shadow: var(--shadow);
+}
+.login-card__title { font-size: 1.3rem; font-weight: 800; text-align: center; margin-bottom: 4px; }
+.login-card__sub { color: var(--text-muted); text-align: center; font-size: 0.9rem; margin-bottom: 24px; }
+.login-card__hint {
+  text-align: center; font-size: 0.8rem; margin-top: 12px; min-height: 20px;
+}
+.login-card__hint.error { color: var(--danger); }
+.login-card__field { margin-bottom: 16px; }
+.login-card__field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+.login-card__input {
+  width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border); background: var(--input-bg);
+  color: var(--text); font-size: 0.95rem; transition: border var(--transition);
+}
+.login-card__input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 24px; border-radius: var(--radius); font-weight: 600;
+  font-size: 0.95rem; transition: all var(--transition); gap: 8px;
+}
+.btn-primary { background: var(--primary); color: white; width: 100%; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: 6px; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { opacity: 0.9; }
+
+/* Dashboard */
+.dashboard { display: none; padding: 32px 0; }
+.dashboard.active { display: block; }
+
+.dashboard__header {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+}
+.dashboard__title { font-size: 1.5rem; font-weight: 800; }
+.dashboard__stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat-badge {
+  padding: 8px 16px; border-radius: 20px; font-size: 0.85rem;
+  font-weight: 600; background: var(--primary-glow); color: var(--primary);
+}
+.stat-badge--new { background: var(--success-glow); color: var(--success); }
+
+/* Search bar */
+.dashboard__search {
+  width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border); background: var(--input-bg);
+  color: var(--text); font-size: 0.9rem; margin-bottom: 20px;
+  transition: border var(--transition);
+}
+.dashboard__search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+/* Messages table */
+.messages-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--bg-card); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.messages-table th {
+  text-align: left; padding: 14px 16px; font-size: 0.8rem;
+  font-weight: 700; color: var(--text-muted);
+  background: var(--bg-alt); border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.messages-table td {
+  padding: 14px 16px; font-size: 0.88rem;
+  border-bottom: 1px solid var(--border); vertical-align: top;
+}
+.messages-table tr:hover td { background: var(--primary-glow); }
+.messages-table .msg-name { font-weight: 700; }
+.messages-table .msg-email { color: var(--primary); font-size: 0.82rem; }
+.messages-table .msg-subject { color: var(--text-muted); font-size: 0.82rem; }
+.messages-table .msg-message {
+  max-width: 300px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; color: var(--text-muted); font-size: 0.82rem;
+}
+.messages-table .msg-date {
+  font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;
+}
+.messages-table .msg-actions { white-space: nowrap; }
+.messages-table .msg-expand-btn {
+  color: var(--primary); cursor: pointer; font-size: 0.78rem; font-weight: 600;
+}
+.messages-table .msg-expand-btn:hover { text-decoration: underline; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 60px 20px; color: var(--text-muted);
+}
+.empty-state__icon { font-size: 3rem; margin-bottom: 12px; }
+.empty-state__text { font-size: 1.1rem; }
+
+/* Loading */
+.spinner {
+  width: 20px; height: 20px; border: 2px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.6s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-overlay {
+  display: none; text-align: center; padding: 40px;
+}
+.loading-overlay.active { display: block; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg-card); border-radius: var(--radius);
+  max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto;
+  padding: 32px; box-shadow: var(--shadow-lg); position: relative;
+}
+.modal__close {
+  position: absolute; top: 12px; right: 16px; font-size: 1.5rem;
+  color: var(--text-muted); cursor: pointer; line-height: 1;
+  background: none; border: none; font-family: inherit;
+}
+.modal__title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.modal__field { margin-bottom: 12px; }
+.modal__field-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 2px; }
+.modal__field-value { font-size: 0.95rem; line-height: 1.6; }
+.modal__actions { margin-top: 16px; display: flex; gap: 8px; }
+
+[dir="rtl"] .modal__close { right: auto; left: 16px; }
+[dir="rtl"] .messages-table th { text-align: right; }
+
+@media (max-width: 768px) {
+  .messages-table { font-size: 0.82rem; }
+  .messages-table th, .messages-table td { padding: 10px 12px; }
+  .messages-table .msg-message { max-width: 120px; }
+  .dashboard__header { flex-direction: column; align-items: stretch; }
+}
+
+/* Footer */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary); font-weight: 600; font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo"><span lang="en">AM Admin</span><span lang="ar" hidden">علاء محمد</span></a>
+    <div class="nav__actions">
+      <button class="btn-icon" id="langToggle" aria-label="Language">AR</button>
+      <button class="btn-icon" id="themeToggle" aria-label="Theme">🌓</button>
+    </div>
+  </div>
+</nav>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-card__title"><span lang="en">Admin Login</span><span lang="ar" hidden>دخول المشرف</span></div>
+    <div class="login-card__sub"><span lang="en">Enter your password to access messages</span><span lang="ar" hidden>أدخل كلمة السر للوصول للرسائل</span></div>
+    <div class="login-card__field">
+      <label><span lang="en">Password</span><span lang="ar" hidden>كلمة السر</span></label>
+      <input type="password" class="login-card__input" id="adminPass" autocomplete="current-password" dir="ltr">
+    </div>
+    <button class="btn btn-primary" id="loginBtn"><span lang="en">Login</span><span lang="ar" hidden>دخول</span></button>
+    <div class="login-card__hint" id="loginHint"></div>
+  </div>
+</div>
+
+<div class="dashboard container" id="dashboard">
+  <a href="index.html" class="back-link">← <span lang="en">Back to Portfolio</span><span lang="ar" hidden>العودة إلى الموقع</span></a>
+
+  <div class="dashboard__header">
+    <h1 class="dashboard__title"><span lang="en">Contact Messages</span><span lang="ar" hidden>رسائل الاتصال</span></h1>
+    <div class="dashboard__stats">
+      <span class="stat-badge" id="totalBadge"><span lang="en">Total: 0</span><span lang="ar" hidden>المجموع: 0</span></span>
+    </div>
+  </div>
+
+  <input type="text" class="dashboard__search" id="searchInput"
+    placeholder="Search by name, email, or message..."
+    data-ar-placeholder="ابحث بالاسم أو البريد أو الرسالة...">
+
+  <div class="loading-overlay active" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="margin-top:12px;color:var(--text-muted);font-size:0.9rem;"><span lang="en">Loading messages...</span><span lang="ar" hidden>جاري تحميل الرسائل...</span></p>
+  </div>
+
+  <div id="messagesContainer"></div>
+</div>
+
+<!-- Message Detail Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal__close" id="modalClose">×</button>
+    <div class="modal__title" id="modalName"></div>
+    <div class="modal__field">
+      <span class="modal__field-label"><span lang="en">Email</span><span lang="ar" hidden">البريد</span></span>
+      <div class="modal__field-value" id="modalEmail"></div>
+    </div>
+    <div class="modal__field">
+      <span class="modal__field-label"><span lang="en">Subject</span><span lang="ar" hidden">الموضوع</span></span>
+      <div class="modal__field-value" id="modalSubject"></div>
+    </div>
+    <div class="modal__field">
+      <span class="modal__field-label"><span lang="en">Message</span><span lang="ar" hidden">الرسالة</span></span>
+      <div class="modal__field-value" id="modalMessage" style="white-space:pre-wrap"></div>
+    </div>
+    <div class="modal__field">
+      <span class="modal__field-label"><span lang="en">Date</span><span lang="ar" hidden">التاريخ</span></span>
+      <div class="modal__field-value" id="modalDate"></div>
+    </div>
+    <div class="modal__actions">
+      <button class="btn btn-danger btn-sm" id="modalDeleteBtn"><span lang="en">Delete</span><span lang="ar" hidden">حذف</span></button>
+      <button class="btn btn-primary btn-sm" id="modalCloseBtn"><span lang="en">Close</span><span lang="ar" hidden">إغلاق</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FUNCTIONS_BASE = 'https://ih9kxwm2.eu-central.insforge.app/functions';
+const state = {
+  lang: localStorage.getItem('portfolio-lang') || 'en',
+  theme: localStorage.getItem('portfolio-theme') || 'light',
+  messages: [],
+  filtered: [],
+  authenticated: false,
+};
+
+const html = document.documentElement;
+
+function applyLang() {
+  html.lang = state.lang;
+  html.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[lang]').forEach(el => {
+    el.hidden = el.getAttribute('lang') !== state.lang;
+  });
+  const searchEl = document.getElementById('searchInput');
+  if (searchEl && state.lang === 'ar') {
+    searchEl.placeholder = searchEl.dataset.arPlaceholder || searchEl.placeholder;
+  }
+  const titleEl = document.querySelector('title[lang="' + state.lang + '"]');
+  if (titleEl) document.title = titleEl.textContent;
+}
+
+function setLang(lang) {
+  state.lang = lang;
+  localStorage.setItem('portfolio-lang', lang);
+  document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'العربية';
+  applyLang();
+}
+
+document.getElementById('langToggle').addEventListener('click', () => setLang(state.lang === 'ar' ? 'en' : 'ar'));
+
+function setTheme(theme) {
+  state.theme = theme;
+  html.setAttribute('data-theme', theme);
+  localStorage.setItem('portfolio-theme', theme);
+  document.getElementById('themeToggle').textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => setTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+async function apiCall(action, extra = {}) {
+  const password = sessionStorage.getItem('adminToken') || '';
+  const res = await fetch(FUNCTIONS_BASE + '/get-contacts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, action, ...extra }),
+  });
+  return res.json();
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(state.lang === 'ar' ? 'ar-EG' : 'en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+let deleteTargetId = null;
+
+function renderMessages(messages) {
+  const container = document.getElementById('messagesContainer');
+  const totalBadge = document.getElementById('totalBadge');
+  const count = messages.length;
+
+  totalBadge.innerHTML = state.lang === 'en'
+    ? 'Total: ' + count
+    : 'المجموع: ' + count;
+
+  if (count === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state__icon">📭</div><div class="empty-state__text">' +
+      (state.lang === 'en' ? 'No messages yet' : 'لا توجد رسائل بعد') + '</div></div>';
+    return;
+  }
+
+  let html = '<table class="messages-table"><thead><tr>' +
+    '<th>' + (state.lang === 'en' ? 'Name' : 'الاسم') + '</th>' +
+    '<th>' + (state.lang === 'en' ? 'Email' : 'البريد') + '</th>' +
+    '<th>' + (state.lang === 'en' ? 'Subject' : 'الموضوع') + '</th>' +
+    '<th>' + (state.lang === 'en' ? 'Message' : 'الرسالة') + '</th>' +
+    '<th>' + (state.lang === 'en' ? 'Date' : 'التاريخ') + '</th>' +
+    '<th></th></tr></thead><tbody>';
+
+  messages.forEach(msg => {
+    const msgShort = (msg.message || '').substring(0, 80);
+    html += '<tr>' +
+      '<td class="msg-name">' + escapeHtml(msg.name) + '</td>' +
+      '<td class="msg-email">' + escapeHtml(msg.email) + '</td>' +
+      '<td class="msg-subject">' + escapeHtml(msg.subject || '-') + '</td>' +
+      '<td class="msg-message" title="' + escapeHtml(msg.message || '') + '">' + escapeHtml(msgShort) + (msg.message && msg.message.length > 80 ? '...' : '') + '</td>' +
+      '<td class="msg-date">' + formatDate(msg.created_at) + '</td>' +
+      '<td class="msg-actions">' +
+        '<button class="msg-expand-btn view-btn" data-id="' + msg.id + '">' + (state.lang === 'en' ? 'View' : 'عرض') + '</button>' +
+        '<button class="msg-expand-btn delete-btn" data-id="' + msg.id + '" style="color:var(--danger);margin-' + (state.lang === 'ar' ? 'left' : 'right') + ':8px">' + (state.lang === 'en' ? 'Delete' : 'حذف') + '</button>' +
+      '</td></tr>';
+  });
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+
+  container.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => showMessage(parseInt(btn.dataset.id)));
+  });
+  container.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteMessage(parseInt(btn.dataset.id)));
+  });
+}
+
+function showMessage(id) {
+  const msg = state.filtered.find(m => m.id === id);
+  if (!msg) return;
+  document.getElementById('modalName').textContent = msg.name;
+  document.getElementById('modalEmail').textContent = msg.email;
+  document.getElementById('modalSubject').textContent = msg.subject || '-';
+  document.getElementById('modalMessage').textContent = msg.message || '';
+  document.getElementById('modalDate').textContent = formatDate(msg.created_at);
+  deleteTargetId = id;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+async function deleteMessage(id) {
+  if (!confirm(state.lang === 'en' ? 'Delete this message?' : 'حذف هذه الرسالة؟')) return;
+  const result = await apiCall('delete', { id });
+  if (result.success) {
+    state.messages = state.messages.filter(m => m.id !== id);
+    filterMessages();
+  } else {
+    alert(state.lang === 'en' ? 'Delete failed: ' + (result.error || 'unknown') : 'فشل الحذف: ' + (result.error || 'خطأ'));
+  }
+}
+
+function filterMessages() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  if (!q) {
+    state.filtered = [...state.messages];
+  } else {
+    state.filtered = state.messages.filter(m =>
+      (m.name || '').toLowerCase().includes(q) ||
+      (m.email || '').toLowerCase().includes(q) ||
+      (m.subject || '').toLowerCase().includes(q) ||
+      (m.message || '').toLowerCase().includes(q)
+    );
+  }
+  renderMessages(state.filtered);
+}
+
+async function loadMessages() {
+  document.getElementById('loadingOverlay').classList.add('active');
+  document.getElementById('messagesContainer').innerHTML = '';
+  try {
+    const result = await apiCall('list');
+    if (result.data) {
+      state.messages = result.data;
+    } else if (result.error) {
+      throw new Error(result.error);
+    }
+    filterMessages();
+  } catch (err) {
+    document.getElementById('messagesContainer').innerHTML =
+      '<div class="empty-state"><div class="empty-state__icon">⚠️</div><div class="empty-state__text" style="color:var(--danger)">' +
+      (state.lang === 'en' ? 'Error: ' + err.message : 'خطأ: ' + err.message) + '</div></div>';
+  }
+  document.getElementById('loadingOverlay').classList.remove('active');
+}
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const password = document.getElementById('adminPass').value;
+  const hint = document.getElementById('loginHint');
+  hint.className = 'login-card__hint';
+  if (!password) {
+    hint.textContent = state.lang === 'en' ? 'Enter password' : 'أدخل كلمة السر';
+    return;
+  }
+
+  hint.textContent = state.lang === 'en' ? 'Verifying...' : 'جاري التحقق...';
+  document.getElementById('loginBtn').disabled = true;
+
+  try {
+    const result = await apiCall('list', {});
+    if (result.data) {
+      sessionStorage.setItem('adminToken', password);
+      state.authenticated = true;
+      state.messages = result.data;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+      filterMessages();
+    } else {
+      hint.textContent = state.lang === 'en' ? 'Wrong password' : 'كلمة سر خاطئة';
+      hint.className = 'login-card__hint error';
+    }
+  } catch (err) {
+    hint.textContent = state.lang === 'en' ? 'Connection error' : 'خطأ في الاتصال';
+    hint.className = 'login-card__hint error';
+  }
+  document.getElementById('loginBtn').disabled = false;
+});
+
+document.getElementById('adminPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+
+document.getElementById('searchInput').addEventListener('input', filterMessages);
+
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
+document.getElementById('modalCloseBtn').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) document.getElementById('modalOverlay').classList.remove('active');
+});
+document.getElementById('modalDeleteBtn').addEventListener('click', async () => {
+  if (deleteTargetId) {
+    await deleteMessage(deleteTargetId);
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+});
+
+// Check if already authed
+const savedPass = sessionStorage.getItem('adminToken');
+if (savedPass) {
+  (async () => {
+    const result = await apiCall('list', {});
+    if (result.data) {
+      state.authenticated = true;
+      state.messages = result.data;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+      filterMessages();
+    } else {
+      sessionStorage.removeItem('adminToken');
+    }
+  })();
+}
+
+setTheme(state.theme);
+setLang(state.lang);
+</script>
+</body>
+</html>
