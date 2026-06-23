@@ -539,6 +539,28 @@ smartGateEmail.addEventListener('keydown', e => {
   if (e.key === 'Enter') smartGateBtn.click();
 });
 
+/* ===== RESUME MODAL ===== */
+const resumeBtn = document.getElementById('resumeBtn');
+const resumeModal = document.getElementById('resumeModal');
+const resumeModalClose = document.getElementById('resumeModalClose');
+const resumeModalOverlay = document.getElementById('resumeModalOverlay');
+
+if (resumeBtn && resumeModal) {
+  resumeBtn.addEventListener('click', () => {
+    resumeModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+  function closeResumeModal() {
+    resumeModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  resumeModalClose.addEventListener('click', closeResumeModal);
+  resumeModalOverlay.addEventListener('click', closeResumeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && resumeModal.classList.contains('active')) closeResumeModal();
+  });
+}
+
 /* ===== INIT ===== */
 setLang(state.lang);
 setTheme(state.theme);

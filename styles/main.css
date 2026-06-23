@@ -1235,6 +1235,81 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   font-size: 0.95rem;
 }
 .smart-gate__success.active { display: flex; }
+/* ===== RESUME MODAL ===== */
+.resume-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.resume-modal.active {
+  pointer-events: auto;
+  opacity: 1;
+}
+.resume-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+.resume-modal__content {
+  position: relative;
+  width: 90vw;
+  max-width: 1000px;
+  height: 85vh;
+  max-height: 800px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+.resume-modal.active .resume-modal__content {
+  transform: scale(1);
+}
+.resume-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text);
+  transition: all var(--transition);
+  box-shadow: var(--shadow);
+}
+.resume-modal__close:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+[dir="rtl"] .resume-modal__close {
+  right: auto;
+  left: 16px;
+}
+.resume-modal__iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 .smart-gate__success-icon {
   width: 28px; height: 28px;
   border-radius: 50%;
